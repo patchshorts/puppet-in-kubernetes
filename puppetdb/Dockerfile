@@ -6,7 +6,7 @@ ARG UBUNTU_CODENAME=bionic
 # base
 ######################################################
 
-FROM puppetlabs/puppetdb:latest
+FROM puppet/puppetdb:latest
 
 ARG DUMB_INIT_VERSION="1.2.2"
 
