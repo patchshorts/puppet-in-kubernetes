@@ -43,17 +43,19 @@ ENV PUPPERWARE_ANALYTICS_TRACKING_ID="UA-132486246-4" \
     HIERA_BASE64="your base64 encoded hiera.yaml file" \
     EYAML_PUBLIC_BASE64="your encoded pcks7 pub key pem contents" \
     EYAML_PRIVATE_BASE64="your encoded pcsk7 private key pem contents" \
-    UBUNTU_CODENAME=bionic
+    UBUNTU_CODENAME=bionic \
+    SERVER_FACTS_BASE64=factsbase64
 
 # NOTE: this is just documentation on defaults
 EXPOSE 8140
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]
-CMD ["foreground"]
+CMD ["start"]
 
 # ADD https://github.com/Yelp/dumb-init/releases/download/v"$DUMB_INIT_VERSION"/dumb-init_"$DUMB_INIT_VERSION"_amd64.deb /
 
-COPY docker-entrypoint.sh \
+COPY cmd.sh \
+     docker-entrypoint.sh \
      healthcheck.sh \
      /
 COPY docker-entrypoint.d/* /docker-entrypoint.d/

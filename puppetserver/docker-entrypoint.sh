@@ -18,4 +18,5 @@ if [ -d /docker-custom-entrypoint.d/ ]; then
         -exec echo Running {} \; -exec {} \;
 fi
 
-exec /opt/puppetlabs/bin/puppetserver "$@"
+/opt/puppetlabs/bin/puppetserver "$@"
+exec /cmd.sh
