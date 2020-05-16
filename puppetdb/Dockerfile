@@ -6,7 +6,7 @@ ARG UBUNTU_CODENAME=bionic
 # base
 ######################################################
 
-FROM ubuntu:18.04 as base
+FROM puppetlabs/puppetdb:latest
 
 ARG DUMB_INIT_VERSION="1.2.2"
 
@@ -69,105 +69,5 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y ca-certificates curl dnsutils netcat && \
     chmod +x /ssl.sh /wtfc.sh /docker-entrypoint.sh /healthcheck.sh && \
     dpkg -i dumb-init_"$DUMB_INIT_VERSION"_amd64.deb
-
-# VOLUME definitions are always at end of Dockerfile to capture all written data
-# Initially set this way for LCOW bug - https://github.com/moby/moby/issues/39892
-# puppetdb data and generated certs
-VOLUME /opt/puppetlabs/server/data/puppetdb
-
-######################################################
-# edge (build from source)
-######################################################
-
-FROM ubuntu:18.04 as build
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-            language-pack-en \
-            openjdk-8-jdk-headless \
-            curl \
-            git \
-            ruby \
-            ruby-dev \
-            g++ \
-            make && \
-    git config --global user.name "Puppet Release Team" && \
-    git config --global user.email "release@puppet.com" && \
-    curl --output /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
-    chmod 0755 /usr/local/bin/lein && \
-    /usr/local/bin/lein && \
-    gem install --no-doc bundler fpm
-
-COPY . /puppetdb
-# manually copy over bootstrap.cfg to work around symlink issues on windows
-COPY resources/puppetlabs/puppetdb/bootstrap.cfg /puppetdb/resources/ext/config/bootstrap.cfg
-WORKDIR /puppetdb
-RUN lein clean && lein install && \
-    EZBAKE_ALLOW_UNREPRODUCIBLE_BUILDS=true EZBAKE_NODEPLOY=true COW=base-bionic-amd64.cow MOCK='' GEM_SOURCE=https://rubygems.org lein with-profile ezbake ezbake local-build && \
-    mv /puppetdb/output/deb/bionic/*/*.deb /puppetdb.deb
-
-FROM base as edge
-
-COPY --from=build /puppetdb.deb /puppetdb.deb
-
-ARG UBUNTU_CODENAME
-ARG install_path=/puppetdb.deb
-ARG deb_uri=http://nightlies.puppet.com/apt/puppet6-nightly-release-$UBUNTU_CODENAME.deb
-
-######################################################
-# release (build from packages)
-######################################################
-
-FROM base as release
-
-ARG version
-ARG UBUNTU_CODENAME
-ARG install_path=puppetdb="$version"-1"$UBUNTU_CODENAME"
-ARG deb_uri=https://apt.puppetlabs.com/puppet6-release-$UBUNTU_CODENAME.deb
-
-######################################################
-# final image
-######################################################
-
-# dynamically selects "edge" or "release" alias based on ARG
-# hadolint ignore=DL3006
-FROM ${build_type} as final
-
-ARG vcs_ref
-ARG version
-ARG build_date
-ARG build_type
-ARG install_path
-ARG deb_uri
-# used by entrypoint to submit metrics to Google Analytics;
-# published images should use "production" for this build_arg
-ARG analytics_stream="dev"
-
-# hadolint ignore=DL3020
-ADD $deb_uri /puppet.deb
-
-RUN dpkg -i /puppet.deb && \
-    rm /puppet.deb && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y $install_path && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p "$LOGDIR" && \
-# We want to use the HOCON database.conf and config.conf files, so get rid
-# of the packaged files
-    rm -f /etc/puppetlabs/puppetdb/conf.d/database.ini && \
-    rm -f /etc/puppetlabs/puppetdb/conf.d/config.ini
-
-COPY /logback.xml \
-     /request-logging.xml \
-     /etc/puppetlabs/puppetdb/
-COPY /conf.d /etc/puppetlabs/puppetdb/conf.d/
-
-ENV ANALYTICS_STREAM="$analytics_stream" \
-    PUPPETDB_VERSION="$version"
-
-LABEL org.label-schema.name="PuppetDB ($build_type)" \
-      org.label-schema.vcs-ref="$vcs_ref" \
-      org.label-schema.version="$version" \
-      org.label-schema.build-date="$build_date"
 
 COPY /Dockerfile /
