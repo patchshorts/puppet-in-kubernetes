@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 mkdir -p /etc/facter/facts.d/

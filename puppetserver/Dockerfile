@@ -44,7 +44,8 @@ ENV PUPPERWARE_ANALYTICS_TRACKING_ID="UA-132486246-4" \
     EYAML_PUBLIC_BASE64="your encoded pcks7 pub key pem contents" \
     EYAML_PRIVATE_BASE64="your encoded pcsk7 private key pem contents" \
     UBUNTU_CODENAME=bionic \
-    SERVER_FACTS_BASE64=factsbase64
+    SERVER_FACTS_BASE64=factsbase64 \
+    ENVIRONMENT=infrastructure
 
 # NOTE: this is just documentation on defaults
 EXPOSE 8140
