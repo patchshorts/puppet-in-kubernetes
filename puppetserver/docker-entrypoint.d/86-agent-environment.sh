@@ -1,1 +1,2 @@
-sudo puppet config set environment infrastructure --section main
+#!/bin/bash
+puppet config set environment infrastructure --section main
