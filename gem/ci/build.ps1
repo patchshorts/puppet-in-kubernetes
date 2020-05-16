@@ -43,7 +43,7 @@ function Get-EnterpriseContainerVersion(
 # only need to specify -Name or -Path when calling
 function Lint-Dockerfile(
     $Name,
-    $Path = "docker/$Name/Dockerfile",
+    $Path = "$Name/Dockerfile",
     $Ignore = @())
 {
     $ignores = $Ignore | % { if ($_) { '--ignore', $_ } }
@@ -69,10 +69,10 @@ function Test-NetworkAccess() {
 function Build-Container(
     $Name,
     $Namespace = 'puppet',
-    $Dockerfile = "docker/$Name/Dockerfile",
+    $Dockerfile = "$Name/Dockerfile",
     # Context alias set for backward compatibility, but deprecated
     [Alias('Context')]
-    $PathOrUri = "docker/$Name",
+    $PathOrUri = "$Name",
     $Version = (Get-ContainerVersion),
     $Release = '',
     $Vcs_ref = $(git rev-parse HEAD),
@@ -122,7 +122,7 @@ function Initialize-TestEnv()
 function Invoke-ContainerTest(
     $Name,
     $Namespace = 'puppet',
-    $Specs = 'docker/spec',
+    $Specs = 'spec',
     $Options = '.rspec',
     $Version = (Get-ContainerVersion),
     $Release = '')
