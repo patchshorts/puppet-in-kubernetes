@@ -55,8 +55,8 @@ CMD ["foreground"]
 HEALTHCHECK --start-period=5m --interval=10s --timeout=10s --retries=6 CMD ["/healthcheck.sh"]
 
 # hadolint ignore=DL3020
-COPY shared/ssl.sh /
-COPY shared/wtfc.sh /
+COPY ../shared/ssl.sh /
+COPY ../shared/wtfc.sh /
 ADD https://github.com/Yelp/dumb-init/releases/download/v"$DUMB_INIT_VERSION"/dumb-init_"$DUMB_INIT_VERSION"_amd64.deb \
     docker/puppetdb/docker-entrypoint.sh \
     docker/puppetdb/healthcheck.sh \
