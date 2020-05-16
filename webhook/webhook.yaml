@@ -1,0 +1,25 @@
+---
+access_logfile: "/var/log/webhook/access.log"
+allow_uppercase: true
+bind_address: "*"
+client_cfg: "/var/lib/peadmin/.mcollective"
+client_timeout: "120"
+command_prefix: "umask 0022;"
+default_branch: "production"
+discovery_timeout: "10"
+enable_mutex_lock: false
+enable_ssl: false
+generate_types: false
+ignore_environments: []
+pass: "puppet"
+port: "8088"
+prefix: false
+prefix_command: "/bin/echo example"
+private_key_path: "/etc/mcollective/server_private.pem"
+protected: true
+public_key_path: "/etc/mcollective/server_public.pem"
+r10k_deploy_arguments: "-pv"
+server_software: "WebHook"
+use_mco_ruby: false
+use_mcollective: false
+user: "puppet"

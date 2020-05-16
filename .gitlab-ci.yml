@@ -1,0 +1,110 @@
+---
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  REGISTRY_PATH: docker.io/patchshorts
+
+stages:
+  - build
+
+before_script:
+  - echo "U3VwZXJFaWdodHk4IQo=" | base64 -d | docker login -u patchshorts --password-stdin
+
+.dockerbuild:
+  stage: build
+  tags: [ ]
+
+# Puppetserver
+.puppetserver:
+  extends: .dockerbuild
+  script:
+    - docker build -t ${REGISTRY_PATH}/puppetserver:${TAG}
+        --build-arg "PUPPET_SERVER_VERSION=${PUPPET_SERVER_VERSION}"
+        --build-arg "PUPPETDB_TERMINI_VERSION=${PUPPETDB_TERMINI_VERSION}"
+        --build-arg "PUPPET_AGENT_VERSION=${PUPPET_AGENT_VERSION}" puppetserver
+    - docker push ${REGISTRY_PATH}/puppetserver:${TAG}
+
+puppetserver_53:
+  variables:
+    PUPPET_SERVER_VERSION: '5.3.10'
+    PUPPETDB_TERMINI_VERSION: '5.2.11'
+    TAG: "5.3-${CI_COMMIT_REF_NAME}"
+  extends: .puppetserver
+  only: [ devel ]
+
+
+puppetserver_53_tags:
+  variables:
+    TAG: "5.3"
+  extends: puppetserver_53
+  only: [ tags ]
+
+puppetserver_67:
+  variables:
+    PUPPET_SERVER_VERSION: '6.7.2'
+    PUPPETDB_TERMINI_VERSION: '6.7.2'
+    PUPPET_AGENT_VERSION: '6.7.2'
+    TAG: "6.7-${CI_COMMIT_REF_NAME}"
+  extends: .puppetserver
+  only: [ devel ]
+
+puppetserver_67_tags:
+  variables:
+    TAG: "6.7"
+  extends: puppetserver_67
+  only: [ tags ]
+
+# PuppetDB
+.puppetdb:
+  extends: .dockerbuild
+  script:
+    - docker build -t ${REGISTRY_PATH}/puppetdb:${TAG} --build-arg "PUPPETDB_VERSION=${PUPPETDB_VERSION}" puppetdb
+    - docker push ${REGISTRY_PATH}/puppetdb:${TAG}
+
+puppetdb_52:
+  variables:
+    PUPPETDB_VERSION: '5.2.9'
+    TAG: '5.2-${CI_COMMIT_REF_NAME}'
+  extends: .puppetdb
+  only: [ devel ]
+
+puppetdb_52_tags:
+  variables:
+    TAG: '5.2'
+  extends: puppetdb_52
+  only: [ tags ]
+
+puppetdb_63:
+  variables:
+    PUPPETDB_VERSION: '6.3.4'
+    TAG: "6.3-${CI_COMMIT_REF_NAME}"
+  extends: .puppetdb
+  only: [ devel ]
+
+puppetdb_63_tags:
+  variables:
+    TAG: '6.3'
+  extends: puppetdb_63
+  only: [ tags ]
+
+# webhook
+.webhook:
+  extends: .dockerbuild
+  script:
+    - docker build -t ${REGISTRY_PATH}/webhook:${TAG} --build-arg "PUPPET_AGENT_VERSION=${PUPPET_AGENT_VERSION}" webhook
+    - docker push ${REGISTRY_PATH}/webhook:${TAG}
+
+webhook:
+  variables:
+    PUPPET_AGENT_VERSION: 5.5.14
+    TAG: "5.5-${CI_COMMIT_REF_NAME}"
+  extends: .webhook
+  only: [ devel ]
+
+webhook_tags:
+  variables:
+    TAG: '5.5'
+  extends: webhook
+  only: [ tags ]

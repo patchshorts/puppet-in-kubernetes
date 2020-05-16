@@ -1,0 +1,11 @@
+---
+:cachedir: /opt/puppetlabs/r10k/cache
+:sources:
+  puppet:
+    basedir: /etc/puppetlabs/code/environments
+    prefix: false
+    remote: R10K_CONTROL_REPO
+  hiera:
+    basedir: /etc/puppetlabs/code/hieradata
+    prefix: false
+    remote: R10K_HIERA_REPO
