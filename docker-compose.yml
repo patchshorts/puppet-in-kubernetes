@@ -5,7 +5,7 @@ services:
     hostname: puppet
     domainname: local
     # build: puppetserver
-    image: patchshorts/puppetserver:${PUPPETSERVER_VERSION:-5.3}
+    image: patchshorts/puppetserver:${PUPPETSERVER_VERSION:-5.3-devel}
     ports:
       - "0.0.0.0:8140:8140"
     environment:
@@ -56,7 +56,7 @@ services:
   puppetdb:
     hostname: puppetdb
     domainname: local
-    image: patchshorts/puppetdb:${PUPPETDB_VERSION:-5.2}
+    image: patchshorts/puppetdb:${PUPPETDB_VERSION:-5.2-devel}
     environment:
       - PUPPERWARE_ANALYTICS_ENABLED=${PUPPERWARE_ANALYTICS_ENABLED:-false}
       # This name is an FQDN so the short name puppet doesn't collide outside compose network
@@ -77,7 +77,7 @@ services:
     hostname: webhook
     domainname: local
     # build: webhook
-    image: patchshorts/webhook:${WEBHOOK_VERSION:-5.5}
+    image: patchshorts/webhook:${WEBHOOK_VERSION:-5.5-devel}
     environment:
       - R10K_CONTROL_REPO=${R10K_CONTROL_REPO:-ssh://git@gitlab.com/puppet-control/sample-control.git}
       - R10K_HIERA_REPO=${R10K_HIERA_REPO:-ssh://git@gitlab.com/hiera/sample.git}
