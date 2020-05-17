@@ -16,3 +16,8 @@ if [ -n "$EYAML_PRIVATE_BASE64" ]; then
   echo "---> Saving Eyaml private key to /etc/puppetlabs/keys/private_key.pkcs7.pem (base64 decoded)"
   echo -e "$EYAML_PRIVATE_BASE64" | base64 -d > /etc/puppetlabs/keys/private_key.pkcs7.pem
 fi
+
+while ! `/usr/bin/git --git-dir /etc/puppetlabs/puppet/code/environments/$ENVIRONMENT/.git rev-parse HEAD > /dev/null 2>&1`;do
+  echo "---> Waiting for webhook to write /etc/puppetlabs/puppet/code/environments/${ENVIRONMENT}/.git";
+  sleep 15
+done

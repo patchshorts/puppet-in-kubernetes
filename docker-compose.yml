@@ -29,6 +29,8 @@ services:
       - puppetserver-code:/etc/puppetlabs/code/
       - puppetserver-config:/etc/puppetlabs/puppet/
       - puppetserver-data:/opt/puppetlabs/server/data/puppetserver/
+    depends_on:
+      - webhook
     links:
       - puppetdb:puppetdb.local
   postgres:
@@ -54,7 +56,7 @@ services:
   puppetdb:
     hostname: puppetdb
     domainname: local
-    image: puppet/puppetdb:${PUPPETDB_VERSION:-latest}
+    image: patchshorts/puppetdb:${PUPPETDB_VERSION:-5.2}
     environment:
       - PUPPERWARE_ANALYTICS_ENABLED=${PUPPERWARE_ANALYTICS_ENABLED:-false}
       # This name is an FQDN so the short name puppet doesn't collide outside compose network
@@ -71,7 +73,8 @@ services:
       - postgres
     volumes:
       - puppetdb:/opt/puppetlabs/server/data/puppetdb/
-      - puppetserver-config:/etc/puppetlabs/puppet/
+    links:
+      - puppet:puppet.local
   webhook:
     hostname: webhook
     domainname: local
