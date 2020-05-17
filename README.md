@@ -10,17 +10,37 @@ To get started, you will need an installation of
 which you will run your Puppet Infrastructure.
 
 # Vagrant
-If you have Vagrant and VirtualBox installed and working, you can just clone this repo and run vagrant up. It works best when you have the vagrant cli in wsl and vagrant in windows working together.
+If you have Vagrant and VirtualBox installed and working on windows, you can just clone this repo and run vagrant up. It works best when you have the the same versions of
+vagrant cli in wsl and vagrant in windows working together. To do this, read this [README-windows.md](./README-windows.md).
 
+## Vagrant + Docker Compose
 ```
-git clone https://www.github.com/patchshorts/puppet-in-kubernetes
+    git clone https://www.github.com/patchshorts/puppet-in-kubernetes
+    cd puppet-in-kubernetes
 
-vagrant up
+    vagrant up dockercompose --provision
+```
+## Vagrant + Kubernetes
+```
+Stay tuned for these instructions.
 ```
 
-Running Puppet Infrastructure in [Kubernetes](https://kubernetes.io/) is also a very viable option. To get started with that, you will need a running K8s cluster with [Helm](https://helm.sh/) deployed.
+Running Puppet Infrastructure in [Kubernetes](https://kubernetes.io/) is available as a helm chart from puppet labs. It doesn't have the eyaml and webhook features this module does. We may make our own chart soon.
 
-We've been developing our own Helm chart which can get you up & running fast. You can find it [here](https://github.com/puppetlabs/puppetserver-helm-chart). It's hosted as a Helm chart [here](https://puppetlabs.github.io/puppetserver-helm-chart) and published in the fantastic [Helm Hub](https://hub.helm.sh/charts/puppet/puppetserver-helm-chart) and [Artifact Hub](https://artifacthub.io/package/chart/puppetserver/puppetserver-helm-chart). The latter will allow you to make use of it by just adding the repo in your configured Helm repos.
+To get started with that, you will need a running K8s cluster with [Helm](https://helm.sh/) deployed.
+
+The Puppet Labs, Inc. Helm chart is [here](https://github.com/puppetlabs/puppetserver-helm-chart). It's hosted as a Helm chart [here](https://puppetlabs.github.io/puppetserver-helm-chart) and published in the fantastic [Helm Hub](https://hub.helm.sh/charts/puppet/puppetserver-helm-chart) and [Artifact Hub](https://artifacthub.io/package/chart/puppetserver/puppetserver-helm-chart). The latter will allow you to make use of it by just adding the repo in your configured Helm repos.
+
+## Docker Compose
+
+If you want to skip vagrant, just do this:
+```
+    git clone https://www.github.com/patchshorts/puppet-in-kubernetes
+    cd puppet-in-kubernetes
+    docker-compose up -d
+    docker-compose logs -f
+   
+```
 
 ## Required versions
 
@@ -36,13 +56,6 @@ We've been developing our own Helm chart which can get you up & running fast. Yo
   * OSX is tested during development with `Docker Engine - Community` edition
       - Client `18.09.1` using API version `1.39` (`Git commit:        4c52b90`)
       - Server `18.09.1` using API version `1.39 (minimum version 1.12)` (`Git commit:       4c52b90`)
-
-## Provisioning
-
-Once you have Docker Compose installed, you can start the stack on Linux or OSX with:
-```
-    DNS_ALT_NAMES=host.example.com docker-compose up -d
-```
 
 #Configuration
 
@@ -80,14 +93,14 @@ An example .env file looks like this.
 ```
 # Required
 
-EYAML_PRIVATE_BASE64=fullyunquotedbase64string
-EYAML_PUBLIC_BASE64=fullyunquotedbase64string
-HIERA_BASE64=fullyunquotedbase64string
 R10K_CONTROL_REPO=ssh://github.com/path/to/repo/with/Puppetfile # use ssh
-R10K_HIERA_REPO=ssh://github.com/path/to/repo/with/yaml #use ssh
 R10K_DEPLOY_KEY_BASE64=fullyunquotedbase64id_rsafilecontents # This is your deploy key
 
 # Optional
+R10K_HIERA_REPO=ssh://github.com/path/to/repo/with/yaml #use ssh
+HIERA_BASE64=fullyunquotedbase64string
+EYAML_PRIVATE_BASE64=fullyunquotedbase64string
+EYAML_PUBLIC_BASE64=fullyunquotedbase64string
 POSTGRES_PASSWORD=puppetdb
 PUPPETDB_PASSWORD=${POSTGRES_PASSWORD}
 POSTGRES_USER=puppetdb
@@ -220,7 +233,7 @@ The Puppet owned containers run in the stack collect usage data. You can opt out
 * Version of the puppetdb container.
 * Anonymized IP address is used by Google Analytics for Geolocation data, but the IP address is not collected.
 
-### Why does we collect data?
+### Why do we collect data?
 
 We collect data to help us understand how the containers are used and make decisions about upcoming changes.
 

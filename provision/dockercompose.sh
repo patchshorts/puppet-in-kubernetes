@@ -15,4 +15,6 @@ echo "done"
 
 echo "Installing configuration..."
 cd /vagrant/
-docker-compose up
+docker-compose up -d
+
+docker-compose logs -f

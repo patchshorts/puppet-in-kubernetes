@@ -73,8 +73,6 @@ services:
       - postgres
     volumes:
       - puppetdb:/opt/puppetlabs/server/data/puppetdb/
-    links:
-      - puppet:puppet.local
   webhook:
     hostname: webhook
     domainname: local
@@ -88,8 +86,6 @@ services:
       - "0.0.0.0:8088:8088"
     volumes:
       - puppetserver-code:/etc/puppetlabs/code/
-      - puppetserver-config:/etc/puppetlabs/puppet/
-      - puppetserver-data:/opt/puppetlabs/server/data/puppetserver/
 
 
 volumes:

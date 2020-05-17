@@ -8,6 +8,12 @@ else
 fi
 
 if [ -n "$R10K_HIERA_REPO" ]; then
+  cat >> /etc/puppetlabs/r10k/r10k.yaml << EOF
+  hiera:
+    basedir: /etc/puppetlabs/code/hieradata
+    prefix: false
+    remote: R10K_HIERA_REPO
+EOF
   echo "---> Configuring r10k repository: ${R10K_HIERA_REPO}"
   sed -i "s|R10K_HIERA_REPO|$R10K_HIERA_REPO|" /etc/puppetlabs/r10k/r10k.yaml
 else
@@ -26,7 +32,7 @@ if [ -n "$R10K_DEPLOY_KEY_BASE64" ]; then
   chmod 0400 /root/.ssh/id_rsa
 fi
 
-if [ -n "$R10K_ADDITIONAL_CONFIG" ]; then
+if [ -n "$R10K_ADDITIONAL_CONFIG_BASE64" ]; then
   echo "---> Additional r10k configuration"
-  echo "$R10K_ADDITIONAL_CONFIG" >> /etc/puppetlabs/r10k/r10k.yaml
+  echo "$R10K_ADDITIONAL_CONFIG_BASE64" | base64 -d >> /etc/puppetlabs/r10k/r10k.yaml
 fi
