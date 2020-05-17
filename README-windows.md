@@ -1,4 +1,45 @@
-# Pupperware on Windows
+# on Windows with WSL and Vagrant
+
+Install VirtualBox and Vagrant and get the working together. Inside your WSL environment, install the exact same version as vagrant.
+
+## Setup the disk
+This is to enable proper git permissions. While this one doesn't some applications will not work with rwxrwxrwx on everything.
+
+```
+sudo sh -c "echo '%sudo   ALL=(ALL:ALL) NOPASSWD:ALL' > /etc/sudoers.d/sudo.group.nopasswd"
+
+echo "sudo umount /mnt/c && sudo mount -t drvfs C: /mnt/c -o metadata" >> ~/.bashrc
+
+. ~/.bashrc
+```
+
+Of course, change your drive if you need to. If you're trying to get this to work in WSL you should know what you're doing, other wise just vagrant up inside of cmd.exe.
+
+## Setup your vagrant cli
+
+Add this to ~/.profile and then run `. ~/.profile`
+
+```
+export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+export VAGRANT_WSL_DISABLE_VAGRANT_HOME="0"
+export VAGRANT_WSL_WINDOWS_ACCESS_USER_HOME_PATH="/home/myuser/"
+export VAGRANT_DEFAULT_PROVIDER="virtualbox"
+export VAGRANT_WSL_WINDOWS_ACCESS_USER_HOME_PATH="/mnt/c/Vagrant"
+export VAGRANT_HOME="/home/myuser/.vagrant.d"
+```
+
+## Run docker-compose or run in Kubernetes
+
+```
+vagrant up dockercompose --provision
+```
+or
+```
+vagrant up kuben kubem --provision
+```
+This doesn't actually work yet, we're working on it. Check back daily.
+
+# on Windows with docker native
 
 The ecosystem surrounding Docker container support for Linux containers on Windows is currently in flux and in heavy active development. In addition to the constant forward momentum, there have been a number of confusing naming choices to the toolchains as components have made foundational underlying changes. As a result, large swaths of online documentation for these projects don't reflect the current state of these projects, or some of their technical details / limitations.
 
