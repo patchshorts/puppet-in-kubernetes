@@ -10,7 +10,7 @@ stages:
   - build
 
 before_script:
-  - echo "U3VwZXJFaWdodHk4IQo=" | base64 -d | docker login -u patchshorts --password-stdin
+  - echo "${DOCKERPASS_BASE64}" | base64 -d | docker login -u patchshorts --password-stdin
 
 .dockerbuild:
   stage: build
