@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ "${PUPPERWARE_ANALYTICS_ENABLED}" = "false" ]; then
-    echo "($0) Pupperware analytics disabled; skipping metric submission"
+if [ "${ANALYTICS_ENABLED}" = "false" ]; then
+    echo "($0) Analytics disabled; skipping metric submission"
     exit 0
 fi
 
@@ -16,7 +16,7 @@ av=$PUPPETDB_VERSION
 _file=/var/tmp/pwclientid
 cid=$(cat $_file 2>/dev/null || (cat /proc/sys/kernel/random/uuid | tee $_file))
 # Event Category
-ec=${PUPPERWARE_ANALYTICS_STREAM:-dev}
+ec=${ANALYTICS_STREAM:-dev}
 # Event Action
 ea=start
 # Anonymize ip

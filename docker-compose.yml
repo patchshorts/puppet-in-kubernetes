@@ -17,7 +17,7 @@ services:
       # reached. Add other names as a comma-separated list
       - CA_ALLOW_SUBJECT_ALT_NAMES=${CA_ALLOW_SUBECT_ALT_NAMES:-true}
       - DNS_ALT_NAMES=${DNS_ALT_NAMES:-puppet.local}
-      - PUPPERWARE_ANALYTICS_ENABLED=${PUPPERWARE_ANALYTICS_ENABLED:-false}
+      - ANALYTICS_ENABLED=${ANALYTICS_ENABLED:-false}
       - PUPPETDB_HOSTNAME=${PUPPETDB_HOSTNAME:-puppetdb.local}
       - PUPPETDB_SERVER_URLS=https://${PUPPETDB_HOSTNAME:-puppetdb.local}:8081
       - HIERA_BASE64=${HIERA_BASE64:-}
@@ -58,7 +58,7 @@ services:
     domainname: local
     image: patchshorts/puppetdb:${PUPPETDB_VERSION:-5.2-devel}
     environment:
-      - PUPPERWARE_ANALYTICS_ENABLED=${PUPPERWARE_ANALYTICS_ENABLED:-false}
+      - ANALYTICS_ENABLED=${ANALYTICS_ENABLED:-false}
       # This name is an FQDN so the short name puppet doesn't collide outside compose network
       - PUPPETSERVER_HOSTNAME=${PUPPETSERVER_HOSTNAME:-puppet}
       - PUPPETDB_POSTGRES_HOSTNAME=${PUPPETDB_POSTGRES_HOSTNAME:-postgres}

@@ -18,9 +18,9 @@ LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.schema-version="1.0" \
       org.label-schema.dockerfile="/Dockerfile"
 
-ENV PUPPERWARE_ANALYTICS_TRACKING_ID="UA-132486246-4" \
-    PUPPERWARE_ANALYTICS_APP_NAME="puppetserver" \
-    PUPPERWARE_ANALYTICS_ENABLED=false \
+ENV ANALYTICS_TRACKING_ID="UA-132486246-4" \
+    ANALYTICS_APP_NAME="puppetserver" \
+    ANALYTICS_ENABLED=false \
     PUPPETSERVER_JAVA_ARGS="-Xms512m -Xmx512m" \
     PATH=/opt/puppetlabs/server/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/bin:$PATH \
     SSLDIR=/etc/puppetlabs/puppet/ssl \
