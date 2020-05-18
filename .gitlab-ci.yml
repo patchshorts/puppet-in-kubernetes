@@ -24,7 +24,7 @@ before_script:
   tags: [ docker ]
 
 .dockerpush:
-  stage push
+  stage: push
   tags: [ docker ]
 
 # Puppetserver
