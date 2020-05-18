@@ -18,6 +18,8 @@ if [ "${1}" == "start" ];then
       find /docker-custom-entrypoint.d/ -type f -name "*.sh" \
           -exec echo Running {} \; -exec {} \;
   fi
+  /opt/puppetlabs/bin/puppetserver "$@"
+  exec /cmd.sh
+else
+  exec /opt/puppetlabs/bin/puppetserver "$@"
 fi
-/opt/puppetlabs/bin/puppetserver "$@"
-exec /cmd.sh

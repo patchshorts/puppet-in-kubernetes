@@ -8,6 +8,8 @@ if [ "${1}" == "deploy" ];then
     "$f"
   done
 
-/usr/bin/r10k "$@" || exit 0
+  /usr/bin/r10k "$@" || exit 0
+  exec /opt/puppetlabs/puppet/bin/ruby "/usr/local/bin/webhook"
+else
+  exec /usr/bin/r10k "$@"
 fi
-exec /opt/puppetlabs/puppet/bin/ruby "/usr/local/bin/webhook"
