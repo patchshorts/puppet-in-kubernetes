@@ -34,7 +34,7 @@ before_script:
   script:
     - docker build -t ${REGISTRY_PATH}/puppetserver puppetserver
     - docker tag ${REGISTRY_PATH}/puppetserver ${REGISTRY_PATH}/puppetserver:${TAG}
-    - docker run ${REGISTRY_PATH}/puppetserver /test.sh
+    - docker run ${REGISTRY_PATH}/puppetserver "--version"
     - docker push ${REGISTRY_PATH}/puppetserver:${TAG}
 
 puppetserver_devel:
@@ -76,6 +76,8 @@ puppetdb:
   script:
     - docker build -t ${REGISTRY_PATH}/webhook webhook
     - docker tag ${REGISTRY_PATH}/webhook ${REGISTRY_PATH}/webhook:${TAG}
+    - docker run ${REGISTRY_PATH}/webhook "--version"
+    - docker push ${REGISTRY_PATH}/webhook:${TAG}
 
 webhook_devel:
   variables:
