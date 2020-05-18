@@ -55,7 +55,7 @@ puppetserver:
   script:
     - docker build -t ${REGISTRY_PATH}/puppetdb puppetdb
     - docker tag ${REGISTRY_PATH}/puppetdb ${REGISTRY_PATH}/puppetdb:${TAG}
-    - docker run ${REGISTRY_PATH}/puppetdb /test.sh
+    - docker run ${REGISTRY_PATH}/puppetdb "--version"
     - docker push ${REGISTRY_PATH}/puppetdb:${TAG}
 
 puppetdb_devel:
