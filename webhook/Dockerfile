@@ -20,7 +20,7 @@ LABEL org.label-schema.maintainer="Chris Godwin <patchshorts@gmail.com>" \
       com.puppet.dockerfile="/Dockerfile"
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]
-CMD ["deploy","environment","-pv" ]
+CMD ["/usr/local/bin/webhook"]
 
 COPY Dockerfile /
 
