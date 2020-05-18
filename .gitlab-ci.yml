@@ -76,7 +76,7 @@ puppetdb:
   script:
     - docker build -t ${REGISTRY_PATH}/webhook webhook
     - docker tag ${REGISTRY_PATH}/webhook ${REGISTRY_PATH}/webhook:${TAG}
-    - docker run ${REGISTRY_PATH}/webhook "deploy environment deploy infrastructure -pv"
+    - docker run ${REGISTRY_PATH}/webhook deploy environment infrastructure -pv
     - docker push ${REGISTRY_PATH}/webhook:${TAG}
 
 webhook_devel:
