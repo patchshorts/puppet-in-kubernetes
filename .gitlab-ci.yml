@@ -56,6 +56,18 @@ puppetserver:
   extends: .puppetserver
   only: [ tags ]
 
+puppetdb_test_devel:
+  variables:
+    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
+  extends: .puppetdb_test
+  only: [ devel ]
+
+puppetdb_test:
+  variables:
+    TAG: "${CI_COMMIT_TAG}"
+  extends: .puppetdb_test
+  only: [ devel ]
+
 puppetserver_push_devel:
   variables:
     TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
