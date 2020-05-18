@@ -5,106 +5,88 @@ services:
 
 variables:
   REGISTRY_PATH: docker.io/patchshorts
+  DOCKER_DRIVER: overlay2
 
 stages:
   - build
+  - test
+  - push
+  - stage
 
 before_script:
   - echo "${DOCKERPASS_BASE64}" | base64 -d | docker login -u patchshorts --password-stdin
 
 .dockerbuild:
   stage: build
-  tags: [ ]
+  tags: [ docker ]
+
+.dockertest:
+  stage: test
+  tags: [ docker ]
+
+.dockerpush:
+  stage: push
+  tags: [ docker ]
 
 # Puppetserver
 .puppetserver:
   extends: .dockerbuild
   script:
-    - docker build -t ${REGISTRY_PATH}/puppetserver:${TAG}
-        --build-arg "PUPPET_SERVER_VERSION=${PUPPET_SERVER_VERSION}"
-        --build-arg "PUPPETDB_TERMINI_VERSION=${PUPPETDB_TERMINI_VERSION}"
-        --build-arg "PUPPET_AGENT_VERSION=${PUPPET_AGENT_VERSION}" puppetserver
+    - docker build -t ${REGISTRY_PATH}/puppetserver puppetserver
+    - docker tag ${REGISTRY_PATH}/puppetserver ${REGISTRY_PATH}/puppetserver:${TAG}
+    - docker run ${REGISTRY_PATH}/puppetserver "--version"
     - docker push ${REGISTRY_PATH}/puppetserver:${TAG}
 
-puppetserver_53:
+puppetserver_devel:
   variables:
-    PUPPET_SERVER_VERSION: '5.3.10'
-    PUPPETDB_TERMINI_VERSION: '5.2.11'
-    TAG: "5.3-${CI_COMMIT_REF_NAME}"
+    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
   extends: .puppetserver
   only: [ devel ]
 
-
-puppetserver_53_tags:
+puppetserver:
   variables:
-    TAG: "5.3"
-  extends: puppetserver_53
-  only: [ tags ]
-
-puppetserver_67:
-  variables:
-    PUPPET_SERVER_VERSION: '6.7.2'
-    PUPPETDB_TERMINI_VERSION: '6.7.2'
-    PUPPET_AGENT_VERSION: '6.7.2'
-    TAG: "6.7-${CI_COMMIT_REF_NAME}"
+    TAG: "${CI_COMMIT_TAG}"
   extends: .puppetserver
-  only: [ devel ]
-
-puppetserver_67_tags:
-  variables:
-    TAG: "6.7"
-  extends: puppetserver_67
   only: [ tags ]
 
 # PuppetDB
 .puppetdb:
   extends: .dockerbuild
   script:
-    - docker build -t ${REGISTRY_PATH}/puppetdb:${TAG} --build-arg "PUPPETDB_VERSION=${PUPPETDB_VERSION}" puppetdb
+    - docker build -t ${REGISTRY_PATH}/puppetdb puppetdb
+    - docker tag ${REGISTRY_PATH}/puppetdb ${REGISTRY_PATH}/puppetdb:${TAG}
+    - docker run ${REGISTRY_PATH}/puppetdb "--version"
     - docker push ${REGISTRY_PATH}/puppetdb:${TAG}
 
-puppetdb_52:
+puppetdb_devel:
   variables:
-    PUPPETDB_VERSION: '5.2.9'
-    TAG: '5.2-${CI_COMMIT_REF_NAME}'
+    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
   extends: .puppetdb
   only: [ devel ]
 
-puppetdb_52_tags:
+puppetdb:
   variables:
-    TAG: '5.2'
-  extends: puppetdb_52
-  only: [ tags ]
-
-puppetdb_63:
-  variables:
-    PUPPETDB_VERSION: '6.3.4'
-    TAG: "6.3-${CI_COMMIT_REF_NAME}"
+    TAG: "${CI_COMMIT_TAG}"
   extends: .puppetdb
-  only: [ devel ]
-
-puppetdb_63_tags:
-  variables:
-    TAG: '6.3'
-  extends: puppetdb_63
   only: [ tags ]
 
 # webhook
 .webhook:
   extends: .dockerbuild
   script:
-    - docker build -t ${REGISTRY_PATH}/webhook:${TAG} --build-arg "PUPPET_AGENT_VERSION=${PUPPET_AGENT_VERSION}" webhook
+    - docker build -t ${REGISTRY_PATH}/webhook webhook
+    - docker tag ${REGISTRY_PATH}/webhook ${REGISTRY_PATH}/webhook:${TAG}
+    - docker run ${REGISTRY_PATH}/webhook deploy environment infrastructure -pv
     - docker push ${REGISTRY_PATH}/webhook:${TAG}
 
-webhook:
+webhook_devel:
   variables:
-    PUPPET_AGENT_VERSION: 5.5.14
-    TAG: "5.5-${CI_COMMIT_REF_NAME}"
+    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
   extends: .webhook
   only: [ devel ]
 
-webhook_tags:
+webhook:
   variables:
-    TAG: '5.5'
-  extends: webhook
+    TAG: "${CI_COMMIT_TAG}"
+  extends: .webhook
   only: [ tags ]

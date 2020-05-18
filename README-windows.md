@@ -6,7 +6,7 @@ Install VirtualBox and Vagrant and get the working together. Inside your WSL env
 This is to enable proper git permissions. While this one doesn't some applications will not work with rwxrwxrwx on everything.
 
 ```
-sudo sh -c "echo '%sudo   ALL=(ALL:ALL) NOPASSWD:ALL' > /etc/sudoers.d/sudo.group.nopasswd"
+sudo sh -c "echo '%sudo   ALL=(ALL:ALL) NOPASSWD:ALL' > /etc/sudoers.d/sudo_group_nopasswd"
 
 echo "sudo umount /mnt/c && sudo mount -t drvfs C: /mnt/c -o metadata" >> ~/.bashrc
 
