@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-if [ $1 == "deploy" ];then
+if [ "${1}" == "deploy" ];then
   for f in /docker-entrypoint.d/*.sh; do
     # Don't print out any messages here since this is a CLI container
     # chmod +x "$f"
