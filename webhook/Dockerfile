@@ -33,7 +33,7 @@ RUN apt-get update && \
     dpkg -i dumb-init_"${DUMB_INIT_VERSION}"_amd64.deb && \
     rm puppet6-release-"${UBUNTU_CODENAME}".deb dumb-init_"${DUMB_INIT_VERSION}"_amd64.deb && \
     apt-get update && \
-    apt-get install --no-install-recommends -y r10k puppet-agent %%\
+    apt-get install --no-install-recommends -y r10k puppet-agent && \
     gem install sinatra && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
