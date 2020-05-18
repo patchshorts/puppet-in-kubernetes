@@ -5,6 +5,7 @@ services:
 
 variables:
   REGISTRY_PATH: docker.io/patchshorts
+  DOCKER_DRIVER: overlay2
 
 stages:
   - build
@@ -33,15 +34,7 @@ before_script:
   script:
     - docker build -t ${REGISTRY_PATH}/puppetserver puppetserver
     - docker tag ${REGISTRY_PATH}/puppetserver ${REGISTRY_PATH}/puppetserver:${TAG}
-
-.puppetserver_test:
-  extends: .dockertest
-  script:
     - docker run ${REGISTRY_PATH}/puppetserver /test.sh
-
-.puppetserver_push:
-  extends: .dockerpush
-  script:
     - docker push ${REGISTRY_PATH}/puppetserver:${TAG}
 
 puppetserver_devel:
@@ -56,45 +49,13 @@ puppetserver:
   extends: .puppetserver
   only: [ tags ]
 
-puppetserver_test_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .puppetserver_test
-  only: [ devel ]
-
-puppetserver_test:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .puppetserver_test
-  only: [ tags ]
-
-puppetserver_push_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .puppetserver_push
-  only: [ devel ]
-
-puppetserver_push:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .puppetserver_push
-  only: [ tags ]
-
 # PuppetDB
 .puppetdb:
   extends: .dockerbuild
   script:
     - docker build -t ${REGISTRY_PATH}/puppetdb puppetdb
     - docker tag ${REGISTRY_PATH}/puppetdb ${REGISTRY_PATH}/puppetdb:${TAG}
-
-.puppetdb_test:
-  extends: .dockertest
-  script:
     - docker run ${REGISTRY_PATH}/puppetdb /test.sh
-
-.puppetdb_push:
-  extends: .dockerpush
-  script:
     - docker push ${REGISTRY_PATH}/puppetdb:${TAG}
 
 puppetdb_devel:
@@ -109,46 +70,12 @@ puppetdb:
   extends: .puppetdb
   only: [ tags ]
 
-puppetdb_test_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .puppetdb_test
-  only: [ devel ]
-
-puppetdb_test:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .puppetdb_test
-  only: [ tags ]
-
-puppetdb_push_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .puppetdb_push
-  only: [ devel ]
-
-puppetdb_push:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .puppetdb_push
-  only: [ tags ]
-
 # webhook
 .webhook:
   extends: .dockerbuild
   script:
     - docker build -t ${REGISTRY_PATH}/webhook webhook
     - docker tag ${REGISTRY_PATH}/webhook ${REGISTRY_PATH}/webhook:${TAG}
-
-.webhook_test:
-  extends: .dockertest
-  script:
-    - docker run ${REGISTRY_PATH}/webhook /test.sh
-
-.webhook_push:
-  extends: .dockerpush
-  script:
-    - docker push ${REGISTRY_PATH}/webhook:${TAG}
 
 webhook_devel:
   variables:
@@ -160,28 +87,4 @@ webhook:
   variables:
     TAG: "${CI_COMMIT_TAG}"
   extends: .webhook
-  only: [ tags ]
-
-webhook_test_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .webhook_test
-  only: [ devel ]
-
-webhook_test:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .webhook_test
-  only: [ tags ]
-
-webhook_push_devel:
-  variables:
-    TAG: "${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
-  extends: .webhook_push
-  only: [ devel ]
-
-webhook_push:
-  variables:
-    TAG: "${CI_COMMIT_TAG}"
-  extends: .webhook_push
   only: [ tags ]
