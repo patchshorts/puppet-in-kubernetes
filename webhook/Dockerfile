@@ -29,13 +29,11 @@ RUN apt-get update && \
     apt-get install -y wget git netcat && \
     wget https://apt.puppetlabs.com/puppet6-release-"${UBUNTU_CODENAME}".deb && \
     wget https://github.com/Yelp/dumb-init/releases/download/v"$DUMB_INIT_VERSION"/dumb-init_"${DUMB_INIT_VERSION}"_amd64.deb && \
-    wget https://github.com/StreakyCobra/gws/releases/download/"${GWS_VERSION}"/gws-"${GWS_VERSION}" -O /usr/local/bin/gws && \
-    chmod +x /usr/local/bin/gws && \
     dpkg -i puppet6-release-"${UBUNTU_CODENAME}".deb && \
     dpkg -i dumb-init_"${DUMB_INIT_VERSION}"_amd64.deb && \
     rm puppet6-release-"${UBUNTU_CODENAME}".deb dumb-init_"${DUMB_INIT_VERSION}"_amd64.deb && \
     apt-get update && \
-    apt-get install --no-install-recommends -y r10k="${R10K_VERSION}" puppet-agent="${PUPPET_AGENT_VERSION}"-2ubuntu3" && \
+    apt-get install --no-install-recommends -y r10k="${R10K_VERSION}" puppet-agent="${PUPPET_AGENT_VERSION}"-2ubuntu3 && \
     gem install r10k --version "${R10K_VERSION}" --no-ri --no-rdoc && \
     gem install sinatra --version "${SINATRA_VERSION}" && \
     apt-get clean && \
