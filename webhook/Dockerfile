@@ -16,7 +16,6 @@ LABEL org.label-schema.maintainer="Chris Godwin <patchshorts@gmail.com>" \
       org.label-schema.license="Apache-2.0" \
       org.label-schema.vcs-url="https://github.com/patchshorts/puppet-in-kubernetes" \
       org.label-schema.schema-version="1.0" \
-      org.label-schema.dockerfile="/Dockerfile"
       org.label-schema.name="Puppet r10k and Webhook" \
       com.puppet.dockerfile="/Dockerfile"
 
