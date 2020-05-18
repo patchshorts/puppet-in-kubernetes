@@ -8,16 +8,27 @@ ARG UBUNTU_CODENAME=bionic
 
 FROM puppet/puppetdb:latest
 
+LABEL org.label-schema.maintainer="Chris Godwin <patchshorts@gmail.com>" \
+      org.label-schema.vendor="Puppet In Kubernetes" \
+      org.label-schema.url="https://github.com/patchshorts/puppet-in-kubernetes" \
+      org.label-schema.license="Apache-2.0" \
+      org.label-schema.vcs-url="https://github.com/patchshorts/puppet-in-kubernetes" \
+      org.label-schema.schema-version="1.0" \
+      org.label-schema.dockerfile="/Dockerfile" \
+      org.label-schema.name="Puppetdb"
+
 ARG DUMB_INIT_VERSION="1.2.2"
 
 ENV ANALYTICS_ENABLED=false \
+    PUPPETSERVER_HOSTNAME="puppet" \
     PUPPETDB_POSTGRES_HOSTNAME="postgres" \
+    DNS_ALT_NAMES="puppetdb.local" \
+    CERTNAME=puppetdb \
     PUPPETDB_POSTGRES_PORT="5432" \
     PUPPETDB_POSTGRES_DATABASE="puppetdb" \
 # NOTE: SSLDIR should never be set externally or it will break jetty.ini
     SSLDIR=/opt/puppetlabs/server/data/puppetdb/certs \
     LOGDIR=/opt/puppetlabs/server/data/puppetdb/logs \
-    CERTNAME=puppetdb \
     DNS_ALT_NAMES="" \
     WAITFORCERT="" \
     PUPPETDB_USER=puppetdb \
@@ -28,18 +39,11 @@ ENV ANALYTICS_ENABLED=false \
     # used by entrypoint to determine if puppetserver should be contacted for config
     # set to false when container tests are run
     USE_PUPPETSERVER=true
+
 # note: LOGDIR cannot be defined in the same ENV block it's used in
 # this value may be set by users, keeping in mind that some of these values are mandatory
 # -Djavax.net.debug=ssl may be particularly useful to set for debugging SSL
 ENV PUPPETDB_JAVA_ARGS="-Djava.net.preferIPv4Stack=true -Xms256m -Xmx256m -XX:+UseParallelGC -Xlog:gc*:file=$LOGDIR/puppetdb_gc.log::filecount=16,filesize=65536 -Djdk.tls.ephemeralDHKeySize=2048"
-
-LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
-      org.label-schema.vendor="Puppet" \
-      org.label-schema.url="https://github.com/puppetlabs/puppetdb" \
-      org.label-schema.license="Apache-2.0" \
-      org.label-schema.vcs-url="https://github.com/puppetlabs/puppetdb" \
-      org.label-schema.schema-version="1.0" \
-      org.label-schema.dockerfile="/Dockerfile"
 
 # NOTE: this is just documentation on defaults
 EXPOSE 8080 8081
@@ -55,8 +59,9 @@ CMD ["foreground"]
 HEALTHCHECK --start-period=5m --interval=10s --timeout=10s --retries=6 CMD ["/healthcheck.sh"]
 
 # hadolint ignore=DL3020
-COPY shared/ssl.sh /
-COPY shared/wtfc.sh /
+COPY scripts/ssl.sh /
+COPY scripts/wtfc.sh /
+COPY scripts/test.sh /
 ADD https://github.com/Yelp/dumb-init/releases/download/v"$DUMB_INIT_VERSION"/dumb-init_"$DUMB_INIT_VERSION"_amd64.deb \
     /docker-entrypoint.sh \
     /healthcheck.sh \
