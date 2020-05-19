@@ -7,19 +7,25 @@
   provider: "virtualbox"
   gui: false
   provisioner: "provision/dockercompose.sh"
-- name: kunode
-  box: "chenhan/ubuntu-desktop-20.04"
-  ram: 3072
-  timeout: 300
-  network: "public_network"
-  provider: "virtualbox"
-  gui: false
-  provisioner: "provision/kuben.sh"
+  autostart: false
+  ip: 10.0.2.14
 - name: kumaster
   box: "chenhan/ubuntu-desktop-20.04"
-  ram: 1072
+  ram: 2072
   timeout: 300
   network: "public_network"
   provider: "virtualbox"
   gui: false
-  provisioner: "provision/kubem.sh"
+  provisioner: "provision/master.sh"
+  autostart: true
+  ip: 10.0.2.30
+- name: kunode
+  box: "chenhan/ubuntu-desktop-20.04"
+  ram: 2072
+  timeout: 300
+  network: "public_network"
+  provider: "virtualbox"
+  gui: false
+  provisioner: "provision/node.sh"
+  autostart: true
+  ip: 10.0.2.31
