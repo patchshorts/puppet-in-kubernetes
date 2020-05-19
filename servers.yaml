@@ -8,7 +8,8 @@
   gui: false
   provisioner: "provision/dockercompose.sh"
   autostart: false
-  ip: 10.0.2.14
+  autoconfignet: true
+  ip: 10.0.3.29
 - name: kumaster
   box: "chenhan/ubuntu-desktop-20.04"
   ram: 2072
@@ -18,7 +19,11 @@
   gui: false
   provisioner: "provision/master.sh"
   autostart: true
-  ip: 10.0.2.30
+  autoconfignet: true
+  ip: 10.0.3.30
+  bridge:
+    - 'Intel(R) Dual Band Wireless-AC 7265'
+    - 'Microsoft Wi-Fi Direct Virtual Adapter #2'
 - name: kunode
   box: "chenhan/ubuntu-desktop-20.04"
   ram: 2072
@@ -28,4 +33,8 @@
   gui: false
   provisioner: "provision/node.sh"
   autostart: true
-  ip: 10.0.2.31
+  autoconfignet: true
+  ip: 10.0.3.31
+  bridge:
+    - 'Intel(R) Dual Band Wireless-AC 7265'
+    - 'Microsoft Wi-Fi Direct Virtual Adapter #2'

@@ -26,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.hostname = servers["name"]
       srv.vm.boot_timeout = servers["timeout"]
       # srv.vm.network "private_network", 
-      srv.vm.network servers["network"], ip: servers["ip"], bridge: servers["bridge"]
+      srv.vm.network servers["network"], auto_config: servers["autoconfignet"], ip: servers["ip"], bridge: servers["bridge"]
       srv.vm.provider servers["provider"] do |vb|
         vb.gui = servers["gui"]
         vb.name = servers["name"]
