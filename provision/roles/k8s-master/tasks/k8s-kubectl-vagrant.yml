@@ -1,0 +1,9 @@
+---
+- name: configuring kubectl on vagrant host
+  import_tasks: k8s-kubectl-vagrant.yml
+
+  mkdir -p {"/vagrant"}/.kube
+
+  cat ~/.kube/config | yq r - clusters[0].cluster.certificate-authority-data | base64 -d > /vagrant/.kube/cluster-cacert.pem
+  cat ~/.kube/config | yq r - users[0].user.client-certificate-data | base64 -d > /vagrant/.kube/client-cert.pem
+  cat ~/.kube/config | yq r - users[0].user.client-key-data | base64 -d > /vagrant/.kube/client-key.pem
