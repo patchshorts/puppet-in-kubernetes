@@ -1,9 +1,10 @@
 ---
-- name: configureing kubectl on the master
-  import_tasks: k8s-master-config.yml
-
-  mkdir -p {$HOME}/.kube
-
-  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  cp -i /etc/kubernetes/admin.conf /vagrant/.kube/kconfig
-  chown $(id -u):$(id -g) $HOME/.kube/config
+- name: Create Kubernetes config directory
+  file:
+    path: "/vagrant/.kube/"
+    state: directory
+- name: Copy to {{ vagrant_kubeadmin_config }} from admin.conf
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: {{ vagrant_kubeadmin_config }}
+    remote_src: yes

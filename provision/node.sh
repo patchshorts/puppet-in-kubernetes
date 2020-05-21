@@ -1,7 +1,2 @@
 #!/bin/bash
-set -e
-. /vagrant/provision/both.sh
-while [ ! -f /vagrant/kinit.out ];do
-  sleep 2
-done
-/bin/sh -c "`grep -A1 'kubeadm join' /vagrant/kinit.out`"
+apt-get update > /dev/null 2>&1 && apt-get install ansible python python3 sshpass -y > /dev/null 2>&1

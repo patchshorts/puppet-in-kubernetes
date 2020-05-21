@@ -1,0 +1,6 @@
+- name: base tasks
+  import_tasks: base.yml
+- name: docker tasks
+  import_tasks: docker.yml
+- name: kube tasks
+  import_tasks: kube.yml

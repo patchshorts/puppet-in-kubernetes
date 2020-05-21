@@ -1,5 +1,11 @@
 ---
-- name: apply flannel net
-  import_tasks: k8s-net-flannel.yml
-
-  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+- name: Deploy flannel CNI
+  when: init_k8s_cluster is succeeded
+  command: |
+      kubectl --kubeconfig={{ kubeadmin_config }} \
+        apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  register: flannel_net
+  until: create_result.rc == 0
+  retries: 5
+  delay: 2
+  ignore_errors: true

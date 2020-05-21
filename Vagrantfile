@@ -13,27 +13,32 @@ require 'yaml'
 
 # Read YAML file with box details
 # servers = YAML.load_file('servers.yaml')
-servers = YAML.load_file(File.join(File.dirname(__FILE__), 'servers.yaml'))
+nodes = YAML.load_file(File.join(File.dirname(__FILE__), 'nodes.yaml'))
 
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Iterate through entries in YAML file
-  servers.each do |servers|
+  nodes.each do |nodes|
     config.ssh.insert_key = false
-    config.vm.define servers["name"], autostart: servers["autostart"] do |srv|
-      srv.vm.box = servers["box"]
-      srv.vm.hostname = servers["name"]
-      srv.vm.boot_timeout = servers["timeout"]
-      # srv.vm.network "private_network", 
-      srv.vm.network servers["network"], auto_config: servers["autoconfignet"], ip: servers["ip"], bridge: servers["bridge"]
-      srv.vm.provider servers["provider"] do |vb|
-        vb.gui = servers["gui"]
-        vb.name = servers["name"]
-        vb.memory = servers["ram"]
+
+    # Tendency of frequent key regeneration in vagrant means we'll just use this
+    config.ssh.keys_only = false
+    config.ssh.password = 'vagrant'
+    config.vm.define nodes["name"], autostart: nodes["autostart"] do |node|
+      node.vm.box = nodes["box"]
+      node.vm.hostname = nodes["name"]
+      node.vm.boot_timeout = nodes["timeout"]
+      # node.vm.network "private_network", 
+      node.vm.network nodes["network"], auto_config: nodes["autoconfignet"], ip: nodes["ip"], bridge: nodes["bridge"]
+      node.vm.network "forwarded_port", guest: 22, host: nodes["sshport"], id: "ssh"
+      node.vm.provider nodes["provider"] do |vb|
+        vb.gui = nodes["gui"]
+        vb.name = nodes["name"]
+        vb.memory = nodes["ram"]
         vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       end
-      srv.vm.provision "shell", path: servers["provisioner"]
+      node.vm.provision "shell", path: nodes["provisioner"]
     end
   end
 end

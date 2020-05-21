@@ -1,9 +1,33 @@
 ---
-- name: configuring kubectl on vagrant host
-  import_tasks: k8s-kubectl-vagrant.yml
+- name: Deploy kubernetes dashboard into cluster
+  when: init_cluster is succeeded and enable_dashboard
+  command: |
+    cat ~/.kube/config | yq r - \
+      clusters[0].cluster.certificate-authority-data | \
+      base64 -d > /vagrant/.kube/cluster-cacert.pem
+  register: extract_cacert
+  retries: 0
+  delay: 2
+  ignore_errors: true
 
-  mkdir -p {"/vagrant"}/.kube
+- name: Deploy kubernetes dashboard into cluster
+  when: extract_cacert is succeeded
+  command: |
+    cat ~/.kube/config | yq r - \
+      users[0].user.client-certificate-data | \
+      base64 -d > /vagrant/.kube/client-cert.pem
+  register: extract_client_cert
+  retries: 0
+  delay: 2
+  ignore_errors: true
 
-  cat ~/.kube/config | yq r - clusters[0].cluster.certificate-authority-data | base64 -d > /vagrant/.kube/cluster-cacert.pem
-  cat ~/.kube/config | yq r - users[0].user.client-certificate-data | base64 -d > /vagrant/.kube/client-cert.pem
-  cat ~/.kube/config | yq r - users[0].user.client-key-data | base64 -d > /vagrant/.kube/client-key.pem
+- name: Deploy kubernetes dashboard into cluster
+  when: extract_client_cert is succeeded
+  command: |
+    cat ~/.kube/config | yq r - \
+      users[0].user.client-key-data | \
+      base64 -d > /vagrant/.kube/client-key.pem
+  register: extract_client_key
+  retries: 0
+  delay: 2
+  ignore_errors: true

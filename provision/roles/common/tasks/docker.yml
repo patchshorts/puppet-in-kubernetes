@@ -1,0 +1,9 @@
+- name: Install Docker
+  apt:
+    name: "docker.io"
+    state: "present"
+- name: Enable docker service at boot
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: docker

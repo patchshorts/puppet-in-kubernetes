@@ -2,4 +2,4 @@
 .vagrant
 *ca.pem*
 kinit.out
-kconfig
+.kube

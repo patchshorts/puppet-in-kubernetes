@@ -1,0 +1,17 @@
+- name: Add google cloud apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add YQ PPA apt repo
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+
+- name: Install Kubeadm
+  apt:
+    name: kubeadm
+    state: present
+
+- name: Disable swap (if configured).
+  command: swapoff -a
+  tags: ['skip_ansible_lint']
