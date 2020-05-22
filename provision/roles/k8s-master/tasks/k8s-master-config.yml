@@ -4,7 +4,9 @@
     path: "/vagrant/.kube/"
     state: directory
 - name: Copy to {{ vagrant_kubeadmin_config }} from admin.conf
+  when: init_k8s_cluster is succeeded
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: {{ vagrant_kubeadmin_config }}
+    dest: vagrant_kubeadmin_config
     remote_src: yes
+  register: k8s_conf_vag_copy

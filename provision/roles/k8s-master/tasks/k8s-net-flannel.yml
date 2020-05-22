@@ -1,6 +1,6 @@
 ---
 - name: Deploy flannel CNI
-  when: init_k8s_cluster is succeeded
+  when: init_k8s_cluster is succeeded and network == 'flannel'
   command: |
       kubectl --kubeconfig={{ kubeadmin_config }} \
         apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

@@ -8,7 +8,7 @@
     id: CC86BB64
 - name: Add YQ PPA apt repo
   apt_repository:
-    repo: ppa:rmescandon/yq
+    repo: "deb http://ppa.launchpad.net/rmescandon/yq/ubuntu focal main"
 - name: Install YQ
   apt:
     name: "yq"

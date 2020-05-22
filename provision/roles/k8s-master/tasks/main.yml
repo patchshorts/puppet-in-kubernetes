@@ -1,28 +1,11 @@
 - name: kubeadm tasks
   import_tasks: k8s-kubeadm.yml
 
-  kubeadm reset || true
-  kubeadm init --apiserver-advertise-address=10.0.3.30 --pod-network-cidr=10.244.0.0/16 > /vagrant/kinit.out
-
 - name: configureing kubectl on the master
   import_tasks: k8s-master-config.yml
-
-  mkdir -p {$HOME}/.kube
-
-  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  cp -i /etc/kubernetes/admin.conf /vagrant/.kube/kconfig
-  chown $(id -u):$(id -g) $HOME/.kube/config
 
 - name: apply flannel net
   import_tasks: k8s-net-flannel.yml
 
-  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-
 - name: configuring kubectl on vagrant host
   import_tasks: k8s-kubectl-vagrant.yml
-
-  mkdir -p {"/vagrant"}/.kube
-
-  cat ~/.kube/config | yq r - clusters[0].cluster.certificate-authority-data | base64 -d > /vagrant/.kube/cluster-cacert.pem
-  cat ~/.kube/config | yq r - users[0].user.client-certificate-data | base64 -d > /vagrant/.kube/client-cert.pem
-  cat ~/.kube/config | yq r - users[0].user.client-key-data | base64 -d > /vagrant/.kube/client-key.pem

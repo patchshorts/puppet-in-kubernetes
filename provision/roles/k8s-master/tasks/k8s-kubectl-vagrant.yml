@@ -1,32 +1,32 @@
 ---
-- name: Deploy kubernetes dashboard into cluster
-  when: init_cluster is succeeded and enable_dashboard
-  command: |
+- name: Copy cacert to {{ vagrant_kubeconfig }}
+  when: k8s_conf_vag_copy is succeeded
+  shell: |
     cat ~/.kube/config | yq r - \
       clusters[0].cluster.certificate-authority-data | \
-      base64 -d > /vagrant/.kube/cluster-cacert.pem
+      base64 -d > {{ vagrant_kubeconfig }}/cluster-cacert.pem
   register: extract_cacert
   retries: 0
   delay: 2
   ignore_errors: true
 
-- name: Deploy kubernetes dashboard into cluster
+- name: Copy client cert to {{ vagrant_kubeconfig }}
   when: extract_cacert is succeeded
-  command: |
+  shell: |
     cat ~/.kube/config | yq r - \
       users[0].user.client-certificate-data | \
-      base64 -d > /vagrant/.kube/client-cert.pem
+      base64 -d > {{ vagrant_kubeconfig }}/client-cert.pem
   register: extract_client_cert
   retries: 0
   delay: 2
   ignore_errors: true
 
-- name: Deploy kubernetes dashboard into cluster
+- name: Copy client key to {{ vagrant_kubeconfig }}
   when: extract_client_cert is succeeded
-  command: |
+  shell: |
     cat ~/.kube/config | yq r - \
       users[0].user.client-key-data | \
-      base64 -d > /vagrant/.kube/client-key.pem
+      base64 -d > {{ vagrant_kubeconfig }}/client-key.pem
   register: extract_client_key
   retries: 0
   delay: 2
