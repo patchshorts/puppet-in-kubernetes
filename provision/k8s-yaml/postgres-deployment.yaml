@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -8,6 +8,9 @@ metadata:
   name: postgres
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      io.pik.service: postgres
   strategy:
     type: Recreate
   template:
