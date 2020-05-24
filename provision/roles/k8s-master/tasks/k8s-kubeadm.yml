@@ -1,6 +1,6 @@
 ---
 - name: Initializing Kubernetes Cluster
-  when: k8s_reset is succeeded
+  when: install_k8s is succeeded
   shell: |
     kubeadm init --apiserver-advertise-address={{ k8s_master_ip }} \
                  --pod-network-cidr={{ pod_network_cidr }} \
@@ -19,15 +19,15 @@
 - name: Copy admin.conf to {{ kubeconfig }}/config
   when: init_k8s_cluster is succeeded
   copy:
-    src: "{{ kubeadmin_config }}"
-    dest: "{{ kubeconfig }}/config"
+    src: "{{ kubeadmin_conf }}"
+    dest: "{{ kubeadm_config }}"
     mode: 0755
     remote_src: true
 
 - name: Deploy kubernetes dashboard into cluster
   when: init_k8s_cluster is succeeded and additional_features.dashboard
   command: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    kubectl --kubeconfig={{ kubeadm_config }} \
         apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
   register: create_result
   until: create_result is not failed

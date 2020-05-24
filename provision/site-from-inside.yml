@@ -2,18 +2,18 @@
 # This playbook deploys kubernetes in our specific predefined vagrant context
 
 - name: apply common configuration to all nodes
-  hosts: all
+  hosts: k8s-inside
   roles:
     - common
 
 - name: Deploy K8s Master
-  hosts: k8s-masters-inside
+  hosts: kumaster
 
   roles:
     - k8s-master
 
 - name: Deploy K8s Node
-  hosts: k8s-nodes-inside
+  hosts: kunode
 
   roles:
     - k8s-node

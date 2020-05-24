@@ -6,11 +6,6 @@
   roles:
     - common
 
-- name: apply common configuration to all nodes
-  hosts: k8s-inside
-  roles:
-    - common
-
 - name: Deploy K8s Master
   hosts: kumaster
 

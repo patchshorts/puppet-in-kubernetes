@@ -22,9 +22,11 @@ kumaster ansible_host=10.0.3.30 ansible_port=22
 kunode ansible_host=10.0.3.31 ansible_port=22
 
 [k8s-outside]
-kumaster ansible_host=127.0.0.1 ansible_port=2223
-kunode ansible_host=127.0.0.1 ansible_port=2224
+kumaster-out ansible_host=127.0.0.1 ansible_port=2223
+kunode-out ansible_host=127.0.0.1 ansible_port=2224
 
+[k8s-inside:vars]
+ansible_python_interpreter=/usr/bin/python3
 # If you have multiple hosts following a pattern you can specify
 # them like this:
 

@@ -1,5 +1,6 @@
 - name: Joining Kubernetes Cluster
-  when: init_k8s_cluster is succeeded
   shell: |
     /bin/sh -c "`grep -A1 'kubeadm join' {{ vagrant_kinitout }}`"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
   register: init_k8s_join

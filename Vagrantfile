@@ -37,6 +37,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.name = nodes["name"]
         vb.memory = nodes["ram"]
         vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+        vb.customize [ "modifyvm", :id, "--ioapic", "on"]
+        vb.customize ["modifyvm", :id, "--cpus", "2"]
       end
       node.vm.provision "shell", path: nodes["provisioner"]
     end

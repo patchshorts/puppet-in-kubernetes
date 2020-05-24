@@ -1,4 +1,3 @@
-
 ---
 # Networking
 k8s_master_ip: 10.0.3.30
@@ -8,9 +7,9 @@ network: 'flannel'
 
 # k8s Admin config
 kubeconfig: '/root/.kube'
-kubeadmin_config: '{{ kubeconfig }}/config'
+kubeadm_config: '{{ kubeconfig }}/config'
 vagrant_kubeconfig: '/vagrant/.kube'
-vagrant_kubeadmin_config: '{{ vagrant_kubeconfig }}/config'
+vagrant_kubeadm_config: '{{ vagrant_kubeconfig }}/config'
 
 # k8s Init Options
 kubeadm_opts: ''
@@ -23,7 +22,7 @@ insecure_registries: ['gcr.io']
 systemd_dir: /lib/systemd/system
 system_env_dir: /etc/sysconfig
 network_dir: /etc/kubernetes/network
-kubeadmin_config: /etc/kubernetes/admin.conf
+kubeadmin_conf: /etc/kubernetes/admin.conf
 kube_addon_dir: /etc/kubernetes/addon
 vagrant_kinitout: /vagrant/kinit.out
 
