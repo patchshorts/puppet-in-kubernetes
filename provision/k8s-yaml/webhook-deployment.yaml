@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    io.pik.service: webhook
+  name: webhook
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      creationTimestamp: null
+      labels:
+        io.pik.service: webhook
+    spec:
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: infrastructure
+        image: patchshorts/webhook
+        name: webhook
+        ports:
+        - containerPort: 8088
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+      hostname: webhook
+      restartPolicy: Always
+      subdomain: local
+      volumes:
+      - name: puppetserver-code
+        persistentVolumeClaim:
+          claimName: puppetserver-code
+status: {}

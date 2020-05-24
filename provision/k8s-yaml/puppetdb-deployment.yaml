@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    io.pik.service: puppetdb
+  name: puppetdb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      creationTimestamp: null
+      labels:
+        io.pik.service: puppetdb
+    spec:
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: infrastructure
+        image: patchshorts/puppetdb
+        name: puppetdb
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/puppetlabs/server/data/puppetdb/
+          name: puppetdb
+      hostname: puppetdb
+      restartPolicy: Always
+      subdomain: local
+      volumes:
+      - name: puppetdb
+        persistentVolumeClaim:
+          claimName: puppetdb
+status: {}

@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    io.pik.service: puppet
+  name: puppet
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      creationTimestamp: null
+      labels:
+        io.pik.service: puppet
+    spec:
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: infrastructure
+        image: patchshorts/puppetserver
+        name: puppet
+        ports:
+        - containerPort: 8140
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+        - mountPath: /etc/puppetlabs/puppet/
+          name: puppetserver-config
+        - mountPath: /opt/puppetlabs/server/data/puppetserver/
+          name: puppetserver-data
+      hostname: puppet
+      restartPolicy: Always
+      subdomain: local
+      volumes:
+      - name: puppetserver-code
+        persistentVolumeClaim:
+          claimName: puppetserver-code
+      - name: puppetserver-config
+        persistentVolumeClaim:
+          claimName: puppetserver-config
+      - name: puppetserver-data
+        persistentVolumeClaim:
+          claimName: puppetserver-data
+status: {}
