@@ -50,8 +50,8 @@ COPY webhook /usr/local/bin/
 COPY webhook.yaml /etc/webhook.yaml
 RUN chmod a+x /usr/local/bin/webhook
 RUN mkdir -p /var/run/webhook /var/log/webhook
-RUN find / -uid `id -u puppet` -exec chown 3000:3000 {} \;
-RUN find / -gid `id -g puppet` -exec chown 3000:3000 {} \;
+RUN find / -path /sys -prune -o -path /proc -prune -o -uid `id -u puppet` -exec chown 3000:3000 {} \;
+RUN find / -path /sys -prune -o -path /proc -prune -o -uid `id -g puppet` -exec chown 3000:3000 {} \;
 RUN usermod -u 3000 puppet
 RUN groupmod -g 3000 puppet
 # Copy entrypoint into container
