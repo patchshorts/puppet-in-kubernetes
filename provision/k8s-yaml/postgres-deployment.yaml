@@ -29,6 +29,8 @@ spec:
         - name: POSTGRES_USER
           value: puppetdb
         image: postgres:9.6
+        securityContext:
+          runAsUser: 0
         livenessProbe:
           exec:
             command:

@@ -10,7 +10,8 @@
   autostart: false
   autoconfignet: true
   ip: 10.0.3.29
-  sshport: 2222
+  ports:
+    '2222': '22'
 - name: kunode
   box: "bento/ubuntu-20.04"
   ram: 2072
@@ -25,7 +26,8 @@
   bridge:
     - 'Intel(R) Dual Band Wireless-AC 7265'
     - 'Microsoft Wi-Fi Direct Virtual Adapter #2'
-  sshport: 2224
+  ports:
+    '2223': '22'
 - name: kumaster
   box: "bento/ubuntu-20.04"
   ram: 2072
@@ -40,4 +42,6 @@
   bridge:
     - 'Intel(R) Dual Band Wireless-AC 7265'
     - 'Microsoft Wi-Fi Direct Virtual Adapter #2'
-  sshport: 2223
+  ports:
+    '2224': '22'
+    '6443': '6443'

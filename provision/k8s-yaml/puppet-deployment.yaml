@@ -20,12 +20,31 @@ spec:
       labels:
         io.pik.service: puppet
     spec:
+      initContainers:
+      - name: chmod-er
+        image: busybox:latest
+        command:
+        - /bin/chown
+        - -R
+        - "3000:3000"  # or whatever the mongo UID is, use string "1000" not 1000 due to yaml
+        - /etc/puppetlabs/code/
+        - /etc/puppetlabs/puppet/
+        - /opt/puppetlabs/server/data/puppetserver/
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+        - mountPath: /etc/puppetlabs/puppet/
+          name: puppetserver-config
+        - mountPath: /opt/puppetlabs/server/data/puppetserver/
+          name: puppetserver-data
       containers:
       - env:
         - name: ENVIRONMENT
           value: infrastructure
-        image: patchshorts/puppetserver
+        image: patchshorts/puppetserver:1.0.4
         name: puppet
+        securityContext:
+          runAsUser: 0
         ports:
         - containerPort: 8140
         resources: {}

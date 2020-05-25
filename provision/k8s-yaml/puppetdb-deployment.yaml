@@ -24,8 +24,10 @@ spec:
       - env:
         - name: ENVIRONMENT
           value: infrastructure
-        image: patchshorts/puppetdb
+        image: patchshorts/puppetdb:1.0.4
         name: puppetdb
+        securityContext:
+          runAsUser: 0
         ports:
         - containerPort: 8080
         - containerPort: 8081

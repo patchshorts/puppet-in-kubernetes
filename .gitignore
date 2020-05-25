@@ -1,5 +1,7 @@
+
 .env
 .vagrant
 *ca.pem*
 kinit.out
 .kube
+.data/*

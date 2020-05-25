@@ -18,14 +18,21 @@ vagrant cli in wsl and vagrant in windows working together. To do this, read thi
     git clone https://www.github.com/patchshorts/puppet-in-kubernetes
     cd puppet-in-kubernetes
 
+    $EDITOR .env
+
     vagrant up dockercompose --provision
 ```
+
 ## Vagrant + Kubernetes
+Once you've tested your puppet server setup you can now install it into kubernetes:
+
 ```
-Stay tuned for these instructions.
+    cd puppet-in-kubernetes
+    $EDITOR .env
+    vagrant up
 ```
 
-Running Puppet Infrastructure in [Kubernetes](https://kubernetes.io/) is available as a helm chart from puppet labs. It doesn't have the eyaml and webhook features this module does. We may make our own chart soon.
+Running Puppet Infrastructure in [Kubernetes](https://kubernetes.io/) is available as a helm chart from Puppet Labs. It doesn't have the eyaml and webhook features this module does. We may make our own chart soon.
 
 To get started with that, you will need a running K8s cluster with [Helm](https://helm.sh/) deployed.
 

@@ -6,9 +6,10 @@ metadata:
     io.pik.service: puppetserver-config
   name: puppetserver-config
 spec:
-  accessModes:
-  - ReadWriteOnce
+  storageClassName: local
   resources:
     requests:
       storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
 status: {}
