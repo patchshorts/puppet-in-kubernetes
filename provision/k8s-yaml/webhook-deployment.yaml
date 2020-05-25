@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    io.pik.service: webhook
+  name: webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.pik.service: webhook
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      creationTimestamp: null
+      labels:
+        io.pik.service: webhook
+    spec:
+      initContainers:
+      - name: chmod-er
+        image: busybox:latest
+        command:
+        - /bin/chown
+        - -R
+        - "3000:3000"  # or whatever the mongo UID is, use string "1000" not 1000 due to yaml
+        - /etc/puppetlabs/code/
+        - /etc/puppetlabs/puppet/
+        - /opt/puppetlabs/server/data/puppetserver/
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+        - mountPath: /etc/puppetlabs/puppet/
+          name: puppetserver-config
+        - mountPath: /opt/puppetlabs/server/data/puppetserver/
+          name: puppetserver-data
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: infrastructure
+        image: patchshorts/webhook:1.0.3
+        name: webhook
+        securityContext:
+          runAsUser: 0
+        ports:
+        - containerPort: 8088
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+      hostname: webhook
+      restartPolicy: Always
+      subdomain: local
+      volumes:
+      - name: puppetserver-code
+        persistentVolumeClaim:
+          claimName: puppetserver-code
+status: {}

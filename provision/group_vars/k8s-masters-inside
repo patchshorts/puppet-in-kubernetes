@@ -1,0 +1,3 @@
+---
+service: 'blahservice'
+k9sbase64cert: 'encodedcertdata'

@@ -50,6 +50,7 @@ COPY webhook /usr/local/bin/
 COPY webhook.yaml /etc/webhook.yaml
 RUN chmod a+x /usr/local/bin/webhook
 RUN mkdir -p /var/run/webhook /var/log/webhook
+RUN find /etc/puppetlabs/code/ -exec chown 3000:3000 {} \;
 # Copy entrypoint into container
 COPY docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/

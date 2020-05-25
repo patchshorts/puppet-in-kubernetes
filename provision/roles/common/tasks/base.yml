@@ -1,0 +1,15 @@
+- name: Install Curl
+  apt:
+    name: "curl"
+    state: present
+- name: Add YQ PPA key(CC86BB64)
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: CC86BB64
+- name: Add YQ PPA apt repo
+  apt_repository:
+    repo: "deb http://ppa.launchpad.net/rmescandon/yq/ubuntu focal main"
+- name: Install YQ
+  apt:
+    name: "yq"
+    state: "present"

@@ -1,0 +1,30 @@
+---
+- name: Create PV Mounts
+  apt: name={{ item }} state=present
+  with_items:
+   - nfs-kernel-server
+  register: install_nfs
+
+- name: "Checking PV Mount points"
+  file:
+    path: "/.data/{{item}}"
+    state: directory
+    mode: 0755
+    group: root
+    owner: root    
+  with_items:
+    - puppetdb
+    - puppetdb-postgres
+    - puppetserver-code
+    - puppetserver-config
+    - puppetserver-data
+  register: nfs_mkdir
+
+- name: "nfs-kernel-server: Configure exports"
+  template:
+    src: "exports.j2"
+    dest: "/etc/exports"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: reload nfs-kernel-server

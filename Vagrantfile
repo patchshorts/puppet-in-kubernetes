@@ -13,27 +13,37 @@ require 'yaml'
 
 # Read YAML file with box details
 # servers = YAML.load_file('servers.yaml')
-servers = YAML.load_file(File.join(File.dirname(__FILE__), 'servers.yaml'))
+nodes = YAML.load_file(File.join(File.dirname(__FILE__), 'nodes.yaml'))
 
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Iterate through entries in YAML file
-  servers.each do |servers|
+  nodes.each do |node|
     config.ssh.insert_key = false
-    config.vm.define servers["name"] do |srv|
-      srv.vm.box = servers["box"]
-      srv.vm.hostname = servers["name"]
-      srv.vm.boot_timeout = servers["timeout"]
-      # srv.vm.network "private_network", ip: servers["ip"]
-      srv.vm.network servers["network"], bridge: servers["bridge"]
-      srv.vm.provider servers["provider"] do |vb|
-        vb.gui = servers["gui"]
-        vb.name = servers["name"]
-        vb.memory = servers["ram"]
-        vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+
+    # Tendency of frequent key regeneration in vagrant means we'll just use this
+    config.ssh.keys_only = false
+    config.ssh.password = 'vagrant'
+    config.vm.define node["name"], autostart: node["autostart"] do |srv|
+      srv.vm.box = node["box"]
+      srv.vm.hostname = node["name"]
+      srv.vm.boot_timeout = node["timeout"]
+      # srv.vm.network "private_network", 
+      srv.vm.network node["network"], auto_config: node["autoconfignet"], ip: node["ip"], bridge: node["bridge"]
+      ports = node["ports"]
+      ports.each do |host_port, guest_port|
+        srv.vm.network "forwarded_port", guest: guest_port, host: host_port, id: "#{guest_port}"
       end
-      srv.vm.provision "shell", path: servers["provisioner"]
+      srv.vm.provider node["provider"] do |vb|
+        vb.gui = node["gui"]
+        vb.name = node["name"]
+        vb.memory = node["ram"]
+        vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+        vb.customize [ "modifyvm", :id, "--ioapic", "on"]
+        vb.customize ["modifyvm", :id, "--cpus", "2"]
+      end
+      srv.vm.provision "shell", path: node["provisioner"]
     end
   end
 end

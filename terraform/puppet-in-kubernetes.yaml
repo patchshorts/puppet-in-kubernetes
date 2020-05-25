@@ -1,0 +1,9 @@
+provider "kubernetes" {
+  host = "https://1.0.3.30:6443"
+
+  client_certificate     = file("/vagrant/.kube/client-cert.pem")
+  client_key             = file("/vagrant/.kube/client-key.pem")
+  cluster_ca_certificate = file("/vagrant/.kube/cluster-ca-cert.pem")
+
+  load_config_file = false    # don't load ~/.kube/config
+}

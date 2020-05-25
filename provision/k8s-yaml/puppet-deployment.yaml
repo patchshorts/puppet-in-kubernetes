@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    io.pik.service: puppet
+  name: puppet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.pik.service: puppet
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      creationTimestamp: null
+      labels:
+        io.pik.service: puppet
+    spec:
+      initContainers:
+      - name: chmod-er
+        image: busybox:latest
+        command:
+        - /bin/chown
+        - -R
+        - "3000:3000"  # or whatever the mongo UID is, use string "1000" not 1000 due to yaml
+        - /etc/puppetlabs/code/
+        - /etc/puppetlabs/puppet/
+        - /opt/puppetlabs/server/data/puppetserver/
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+        - mountPath: /etc/puppetlabs/puppet/
+          name: puppetserver-config
+        - mountPath: /opt/puppetlabs/server/data/puppetserver/
+          name: puppetserver-data
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: infrastructure
+        image: patchshorts/puppetserver:1.0.4
+        name: puppet
+        securityContext:
+          runAsUser: 0
+        ports:
+        - containerPort: 8140
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/puppetlabs/code/
+          name: puppetserver-code
+        - mountPath: /etc/puppetlabs/puppet/
+          name: puppetserver-config
+        - mountPath: /opt/puppetlabs/server/data/puppetserver/
+          name: puppetserver-data
+      hostname: puppet
+      restartPolicy: Always
+      subdomain: local
+      volumes:
+      - name: puppetserver-code
+        persistentVolumeClaim:
+          claimName: puppetserver-code
+      - name: puppetserver-config
+        persistentVolumeClaim:
+          claimName: puppetserver-config
+      - name: puppetserver-data
+        persistentVolumeClaim:
+          claimName: puppetserver-data
+status: {}

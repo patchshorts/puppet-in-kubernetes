@@ -1,0 +1,58 @@
+---
+# Networking
+k8s_master_ip: 10.0.3.30
+pod_network_cidr: 10.244.0.0/16
+service_cidr: 10.0.3.0/24
+network: 'flannel'
+
+# k8s Admin config
+kubeconfig: '/root/.kube'
+kubeadm_config: '{{ kubeconfig }}/config'
+vagrant_kubeconfig: '/vagrant/.kube'
+vagrant_kubeadm_config: '{{ vagrant_kubeconfig }}/config'
+
+# k8s Init Options
+kubeadm_opts: ''
+init_opts: ''
+
+# Extra Container Repos
+insecure_registries: ['gcr.io']
+
+# Some Default Directories
+systemd_dir: /lib/systemd/system
+system_env_dir: /etc/sysconfig
+network_dir: /etc/kubernetes/network
+kubeadmin_conf: /etc/kubernetes/admin.conf
+kube_addon_dir: /etc/kubernetes/addon
+vagrant_kinitout: /vagrant/kinit.out
+
+# Additional k8s features to install
+additional_features:
+  helm: true
+  healthcheck: true
+  dashboard: true
+
+# k8s temporary directory
+tmp_dir: /tmp/kubeadm-ansible-files
+
+# NFS Exports
+nfs_exports:
+  - /.data/puppetdb 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+  - /.data/puppetdb-postgres 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+  - /.data/puppetserver-code 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+  - /.data/puppetserver-config 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+  - /.data/puppetserver-data 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+
+# Ansible variables
+ansible_connection: ssh 
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_ssh_user: vagrant 
+ansible_become: yes
+ansible_ssh_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          39303365346230666330636234666435383765386439383366666239393830316562633330333035
+          3861303937323239326334343930356138313663383661320a376334326231653233373465626666
+          61313838303839633763366235396266323461343736333035323437363162323462313239323166
+          3166636434373830310a316637353635373665653831346462326432643834343430663561636661
+          3636
+#ansible_python_interpreter: 'python3'

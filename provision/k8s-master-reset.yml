@@ -1,0 +1,12 @@
+---
+- hosts: kumaster
+  become: true
+  tasks:
+    - name: Reset the cluster incase vagrant provision was interupted.
+      shell: "kubeadm reset --force"
+      tags: ['skip_ansible_lint']
+      register: k8s_reset
+    - name: Delete the admin.conf
+      file:
+        path: /etc/kubernetes/admin.conf
+        state: absent

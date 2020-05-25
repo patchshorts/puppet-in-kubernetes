@@ -50,6 +50,11 @@ ENV ANALYTICS_TRACKING_ID="UA-132486246-4" \
     ENVIRONMENT=infrastructure
 
 # NOTE: this is just documentation on defaults
+RUN find / -path /sys -prune -o -path /proc -prune -o -uid `id -u puppet` -exec chown 3000:3000 {} \;
+RUN find / -path /sys -prune -o -path /proc -prune -o -uid `id -g puppet` -exec chown 3000:3000 {} \;
+RUN usermod -u 3000 puppet
+RUN groupmod -g 3000 puppet
+
 EXPOSE 8140
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]

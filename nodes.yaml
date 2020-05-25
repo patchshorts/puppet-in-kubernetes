@@ -1,0 +1,47 @@
+---
+- name: dockercompose
+  box: "bento/ubuntu-20.04"
+  ram: 3072
+  timeout: 300
+  network: "public_network"
+  provider: "virtualbox"
+  gui: false
+  provisioner: "provision/dockercompose.sh"
+  autostart: false
+  autoconfignet: true
+  ip: 10.0.3.29
+  ports:
+    '2222': '22'
+- name: kunode
+  box: "bento/ubuntu-20.04"
+  ram: 2072
+  timeout: 300
+  network: "public_network"
+  provider: "virtualbox"
+  gui: false
+  provisioner: "provision/node.sh"
+  autostart: true
+  autoconfignet: true
+  ip: 10.0.3.31
+  bridge:
+    - 'Intel(R) Dual Band Wireless-AC 7265'
+    - 'Microsoft Wi-Fi Direct Virtual Adapter #2'
+  ports:
+    '2223': '22'
+- name: kumaster
+  box: "bento/ubuntu-20.04"
+  ram: 2072
+  timeout: 300
+  network: "public_network"
+  provider: "virtualbox"
+  gui: false
+  provisioner: "provision/master.sh"
+  autostart: true
+  autoconfignet: true
+  ip: 10.0.3.30
+  bridge:
+    - 'Intel(R) Dual Band Wireless-AC 7265'
+    - 'Microsoft Wi-Fi Direct Virtual Adapter #2'
+  ports:
+    '2224': '22'
+    '6443': '6443'
