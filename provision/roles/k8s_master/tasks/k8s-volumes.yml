@@ -1,7 +1,7 @@
 # Create volumes in k8s
 # TODO: make thse inline definitions pulled from vars(if possible)
 - name: Create volumes and claims
-  when: init_k8s_join is succeeded
+  when: init_k8s_cluster is succeeded
   k8s:
     src: /vagrant/provision/k8s-yaml/{{ item }}
     state: present

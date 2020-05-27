@@ -26,7 +26,7 @@ spec:
           value: infrastructure
         - name: DNS_ALT_NAMES
           value: puppetdb
-        image: patchshorts/puppetdb:1.0.5
+        image: patchshorts/puppetdb:1.0.6
         name: puppetdb
         securityContext:
           runAsUser: 0
