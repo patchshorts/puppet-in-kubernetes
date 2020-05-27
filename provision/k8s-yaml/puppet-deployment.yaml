@@ -32,7 +32,7 @@ spec:
           value: "https://puppetdb:8081"
         - name: PUPPETDB_HOSTNAME
           value: "puppetdb"
-        image: patchshorts/puppetserver:1.0.5
+        image: patchshorts/puppetserver:1.0.6
         name: puppet
         securityContext:
           runAsUser: 0
