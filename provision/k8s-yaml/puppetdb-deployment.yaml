@@ -24,6 +24,8 @@ spec:
       - env:
         - name: ENVIRONMENT
           value: infrastructure
+        - name: DNS_ALT_NAMES
+          value: puppetdb
         image: patchshorts/puppetdb:1.0.4
         name: puppetdb
         securityContext:
@@ -37,7 +39,7 @@ spec:
           name: puppetdb
       hostname: puppetdb
       restartPolicy: Always
-      subdomain: local
+      subdomain: default
       volumes:
       - name: puppetdb
         persistentVolumeClaim:

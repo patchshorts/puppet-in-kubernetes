@@ -4,7 +4,6 @@
   shell: |
     kubeadm init --apiserver-advertise-address={{ k8s_master_ip }} \
                  --pod-network-cidr={{ pod_network_cidr }} \
-                 --service-cidr {{ service_cidr }} \
                  {{ kubeadm_opts }} \
                  {{ init_opts }} > {{ vagrant_kinitout }}
   register: init_k8s_cluster

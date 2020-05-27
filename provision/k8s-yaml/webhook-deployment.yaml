@@ -20,23 +20,17 @@ spec:
       labels:
         io.pik.service: webhook
     spec:
-      initContainers:
-      - name: chmod-er
-        image: busybox:latest
-        command:
-        - /bin/chown
-        - -R
-        - "3000:3000"  # or whatever the mongo UID is, use string "1000" not 1000 due to yaml
-        - /etc/puppetlabs/code/
-        - /etc/puppetlabs/puppet/
-        - /opt/puppetlabs/server/data/puppetserver/
-        volumeMounts:
-        - mountPath: /etc/puppetlabs/code/
-          name: puppetserver-code
-        - mountPath: /etc/puppetlabs/puppet/
-          name: puppetserver-config
-        - mountPath: /opt/puppetlabs/server/data/puppetserver/
-          name: puppetserver-data
+      # initContainers:
+      # - name: chmod-er
+      #   image: busybox:latest
+      #   command:
+      #   - ls
+      #   - -la
+      #   - /etc/puppetlabs/code/
+      #   - sleep 10
+      #   volumeMounts:
+      #   - mountPath: /etc/puppetlabs/code/
+      #     name: puppetserver-code
       containers:
       - env:
         - name: ENVIRONMENT
@@ -53,7 +47,6 @@ spec:
           name: puppetserver-code
       hostname: webhook
       restartPolicy: Always
-      subdomain: local
       volumes:
       - name: puppetserver-code
         persistentVolumeClaim:

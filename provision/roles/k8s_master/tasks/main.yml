@@ -4,8 +4,8 @@
 - name: configureing kubectl on the master
   import_tasks: k8s-master-config.yml
 
-- name: apply flannel net
-  import_tasks: k8s-net-flannel.yml
+- name: apply net
+  import_tasks: k8s-net.yml
 
 - name: configuring kubectl on vagrant host
   import_tasks: k8s-kubectl-vagrant.yml

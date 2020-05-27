@@ -20,27 +20,18 @@ spec:
       labels:
         io.pik.service: puppet
     spec:
-      initContainers:
-      - name: chmod-er
-        image: busybox:latest
-        command:
-        - /bin/chown
-        - -R
-        - "3000:3000"  # or whatever the mongo UID is, use string "1000" not 1000 due to yaml
-        - /etc/puppetlabs/code/
-        - /etc/puppetlabs/puppet/
-        - /opt/puppetlabs/server/data/puppetserver/
-        volumeMounts:
-        - mountPath: /etc/puppetlabs/code/
-          name: puppetserver-code
-        - mountPath: /etc/puppetlabs/puppet/
-          name: puppetserver-config
-        - mountPath: /opt/puppetlabs/server/data/puppetserver/
-          name: puppetserver-data
       containers:
       - env:
         - name: ENVIRONMENT
           value: infrastructure
+        - name: SERVER_FACTS_BASE64
+          value: "IyEvYmluL3NoCmVjaG8gImN1c3RvbWVyPWludGVybmFsIgplY2hvICJhcHA9aW5mcmFzdHJ1Y3R1cmUiCmVjaG8gInN0YWdlPWluZnJhc3RydWN0dXJlIgplY2hvICJoaWVyYV92ZXJzaW9uPSJgL3Vzci9iaW4vZW52IGhpZXJhIC1WIDI+JjEgfCBncmVwIC12IElnbm9yaW5nIHwgYXdrIC1GLiAne3ByaW50ICQxfSdgCg=="
+        - name: DNS_ALT_NAMES
+          value: puppet
+        - name: PUPPETDB_SERVER_URLS
+          value: "https://puppetdb:8081"
+        - name: PUPPETDB_HOSTNAME
+          value: "puppetdb"
         image: patchshorts/puppetserver:1.0.4
         name: puppet
         securityContext:
@@ -57,7 +48,6 @@ spec:
           name: puppetserver-data
       hostname: puppet
       restartPolicy: Always
-      subdomain: local
       volumes:
       - name: puppetserver-code
         persistentVolumeClaim:

@@ -6,6 +6,9 @@ metadata:
     io.pik.service: puppetdb
   name: puppetdb
 spec:
+  securityContext:
+    runAsUser: 3000
+    fsGroup: 3000
   storageClassName: local
   resources:
     requests:

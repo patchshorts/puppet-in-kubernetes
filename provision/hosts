@@ -17,15 +17,15 @@
 
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 
-[k8s-inside]
+[k8s_inside]
 kumaster ansible_host=10.0.3.30 ansible_port=22
 kunode ansible_host=10.0.3.31 ansible_port=22
 
-[k8s-outside]
-kumaster-out ansible_host=127.0.0.1 ansible_port=2223
-kunode-out ansible_host=127.0.0.1 ansible_port=2224
+[k8s_outside]
+kumaster_out ansible_host=127.0.0.1 ansible_port=2223
+kunode_out ansible_host=127.0.0.1 ansible_port=2224
 
-[k8s-inside:vars]
+[k8s_inside:vars]
 ansible_python_interpreter=/usr/bin/python3
 # If you have multiple hosts following a pattern you can specify
 # them like this:

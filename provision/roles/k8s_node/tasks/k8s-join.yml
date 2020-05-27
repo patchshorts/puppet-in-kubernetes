@@ -1,0 +1,13 @@
+- name: Joining Kubernetes Cluster
+  shell: |
+    /bin/sh -c "`grep -A1 'kubeadm join' {{ vagrant_kinitout }}`"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  register: init_k8s_join
+
+- name: create kubelet environment variable file
+  file: path=/etc/default/kubelet state=touch owner=root group=root mode=0755
+
+- name: Setup Kublete extra args
+  lineinfile: dest=/etc/default/kubelet line='KUBELET_EXTRA_ARGS="--node-ip=10.0.3.31 --resolv-conf=/run/systemd/resolve/resolv.conf"' insertafter='EOF' regexp='KUBELET_EXTRA_ARGS="--node-ip=10.0.3.31"' state=present
+  notify: reload kubelet
