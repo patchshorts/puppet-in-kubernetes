@@ -8,11 +8,9 @@
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
 
 - name: Install k8s
-  apt: name={{ item }} state=present
-  with_items:
-   - kubeadm
-   - kubectl
-   - kubelet
+  apt:
+    name: ['kubeadm', 'kubectl', 'kubelet']
+    state: present
   register: install_k8s
 
 - name: Disable swap (if configured).

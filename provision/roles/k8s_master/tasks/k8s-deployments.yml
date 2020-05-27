@@ -1,0 +1,14 @@
+# Create deployments in k8s
+# TODO: make thse inline definitions pulled from vars(if possible)
+- name: Create deployments
+  when: init_k8s_join is succeeded
+  k8s:
+    src: /vagrant/provision/k8s-yaml/{{ item }}
+    state: present
+    namespace: default
+  with_items:
+    - postgres-deployment.yaml
+    - puppetdb-deployment.yaml
+    - puppet-deployment.yaml
+    - webhook-deployment.yaml
+

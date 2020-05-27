@@ -3,7 +3,7 @@
 k8s_master_ip: 10.0.3.30
 pod_network_cidr: 10.244.0.0/16
 service_cidr: 10.0.3.0/24
-network: 'flannel'
+network: 'calico'
 
 # k8s Admin config
 kubeconfig: '/root/.kube'
@@ -37,11 +37,11 @@ tmp_dir: /tmp/kubeadm-ansible-files
 
 # NFS Exports
 nfs_exports:
-  - /.data/puppetdb 10.0.3.0/24(rw,insecure,no_subtree_check,async)
-  - /.data/puppetdb-postgres 10.0.3.0/24(rw,insecure,no_subtree_check,async)
-  - /.data/puppetserver-code 10.0.3.0/24(rw,insecure,no_subtree_check,async)
-  - /.data/puppetserver-config 10.0.3.0/24(rw,insecure,no_subtree_check,async)
-  - /.data/puppetserver-data 10.0.3.0/24(rw,insecure,no_subtree_check,async)
+  - /.data/puppetdb 10.0.3.0/24(rw,insecure,no_subtree_check,async,no_root_squash,anonuid=3000,anongid=3000)
+  - /.data/puppetdb-postgres 10.0.3.0/24(rw,insecure,no_subtree_check,async,no_root_squash,anonuid=3000,anongid=3000)
+  - /.data/puppetserver-code 10.0.3.0/24(rw,insecure,no_subtree_check,async,no_root_squash,anonuid=3000,anongid=3000)
+  - /.data/puppetserver-config 10.0.3.0/24(rw,insecure,no_subtree_check,async,no_root_squash,anonuid=3000,anongid=3000)
+  - /.data/puppetserver-data 10.0.3.0/24(rw,insecure,no_subtree_check,async,no_root_squash,anonuid=3000,anongid=3000)
 
 # Ansible variables
 ansible_connection: ssh 

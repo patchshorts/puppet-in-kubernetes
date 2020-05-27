@@ -1,0 +1,12 @@
+# Create a new namespace from a YAML file.
+- name: Create services
+  when: init_k8s_join is succeeded
+  k8s:
+    src: /vagrant/provision/k8s-yaml/{{ item }}
+    state: present
+    namespace: default
+  with_items:
+    - postgres-service.yaml
+    - puppetdb-service.yaml
+    - puppet-service.yaml
+    - webhook-service.yaml

@@ -1,17 +1,17 @@
 ---
 - name: Create PV Mounts
-  apt: name={{ item }} state=present
-  with_items:
-   - nfs-kernel-server
+  apt:
+    name: nfs-kernel-server
+    state: present
   register: install_nfs
 
 - name: "Checking PV Mount points"
   file:
     path: "/.data/{{item}}"
     state: directory
-    mode: 0755
-    group: root
-    owner: root    
+    mode: 0777
+    group: "3000"
+    owner: "3000"  
   with_items:
     - puppetdb
     - puppetdb-postgres

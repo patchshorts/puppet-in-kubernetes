@@ -1,0 +1,21 @@
+# Create volumes in k8s
+# TODO: make thse inline definitions pulled from vars(if possible)
+- name: Create volumes and claims
+  when: init_k8s_join is succeeded
+  k8s:
+    src: /vagrant/provision/k8s-yaml/{{ item }}
+    state: present
+    namespace: default
+  with_items:
+    - local-storage-class.yaml
+    - puppetdb-persistentVolume.yaml
+    - puppetdb-persistentvolumeclaim.yaml
+    - puppetdb-postgres-persistentVolume.yaml
+    - puppetdb-postgres-persistentvolumeclaim.yaml
+    - puppetserver-code-persistentVolume.yaml
+    - puppetserver-code-persistentvolumeclaim.yaml
+    - puppetserver-config-persistentVolume.yaml
+    - puppetserver-config-persistentvolumeclaim.yaml
+    - puppetserver-data-persistentVolume.yaml
+    - puppetserver-data-persistentvolumeclaim.yaml
+
