@@ -11,4 +11,13 @@
   import_tasks: k8s-kubectl-vagrant.yml
 
 - name: configuring kubectl on vagrant host
-  import_tasks: storage-config.yaml
+  import_tasks: storage-config.yml
+
+- name: installing volumes into k8s
+  import_tasks: k8s-volumes.yml
+
+- name: installing deployments into k8s
+  import_tasks: k8s-deployments.yml
+
+- name: installing services into k8s
+  import_tasks: k8s-services.yml
