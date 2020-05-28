@@ -7,17 +7,11 @@
 
 - name: "Checking PV Mount points"
   file:
-    path: "/.data/{{item}}"
+    path: "/srv/nfs/kubedata"
     state: directory
     mode: 0777
-    group: "3000"
-    owner: "3000"  
-  with_items:
-    - puppetdb
-    - puppetdb-postgres
-    - puppetserver-code
-    - puppetserver-config
-    - puppetserver-data
+    group: 65534
+    owner: 65534
   register: nfs_mkdir
 
 - name: "nfs-kernel-server: Configure exports"

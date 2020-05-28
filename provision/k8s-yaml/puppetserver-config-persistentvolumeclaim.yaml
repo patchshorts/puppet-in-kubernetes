@@ -6,13 +6,9 @@ metadata:
     io.pik.service: puppetserver-config
   name: puppetserver-config
 spec:
-  securityContext:
-    runAsUser: 3000
-    fsGroup: 3000
-  storageClassName: local
   resources:
     requests:
       storage: 100Mi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
 status: {}

@@ -1,21 +1,25 @@
 # Create volumes in k8s
 # TODO: make thse inline definitions pulled from vars(if possible)
-- name: Create volumes and claims
+- name: Create NFS Volume Infrastructure
+  when: init_k8s_cluster is succeeded
+  k8s:
+    src: /vagrant/provision/k8s-yaml/nfs/{{ item }}
+    state: present
+    namespace: default
+  with_items:
+    - rbac.yaml
+    - default-sc.yaml
+    - deployment.yaml
+
+- name: Create volumesclaims
   when: init_k8s_cluster is succeeded
   k8s:
     src: /vagrant/provision/k8s-yaml/{{ item }}
     state: present
     namespace: default
   with_items:
-    - local-storage-class.yaml
-    - puppetdb-persistentVolume.yaml
     - puppetdb-persistentvolumeclaim.yaml
-    - puppetdb-postgres-persistentVolume.yaml
     - puppetdb-postgres-persistentvolumeclaim.yaml
-    - puppetserver-code-persistentVolume.yaml
     - puppetserver-code-persistentvolumeclaim.yaml
-    - puppetserver-config-persistentVolume.yaml
     - puppetserver-config-persistentvolumeclaim.yaml
-    - puppetserver-data-persistentVolume.yaml
     - puppetserver-data-persistentvolumeclaim.yaml
-

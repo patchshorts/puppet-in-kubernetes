@@ -28,23 +28,15 @@ spec:
           value: puppetdb
         - name: POSTGRES_USER
           value: puppetdb
-        image: postgres:9.6
+        image: postgres:12
         securityContext:
           runAsUser: 0
         ports:
           - containerPort: 5432
-        livenessProbe:
-          exec:
-            command:
-            - psql --username=puppetdb puppetdb -c ''
-          failureThreshold: 6
-          initialDelaySeconds: 120
-          periodSeconds: 10
-          timeoutSeconds: 5
         name: postgres
         resources: {}
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
+        - mountPath: /var/lib/postgresql/
           name: puppetdb-postgres
       hostname: postgres
       restartPolicy: Always

@@ -35,7 +35,7 @@ spec:
       - env:
         - name: ENVIRONMENT
           value: infrastructure
-        image: patchshorts/webhook:1.0.6
+        image: patchshorts/webhook:1.0.7
         name: webhook
         securityContext:
           runAsUser: 0
