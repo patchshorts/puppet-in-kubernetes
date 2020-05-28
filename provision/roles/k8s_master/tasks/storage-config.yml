@@ -10,8 +10,8 @@
     path: "/srv/nfs/kubedata"
     state: directory
     mode: 0777
-    group: nobody
-    owner: nobody  
+    group: 65534
+    owner: 65534
   register: nfs_mkdir
 
 - name: "nfs-kernel-server: Configure exports"

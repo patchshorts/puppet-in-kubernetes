@@ -33,14 +33,6 @@ spec:
           runAsUser: 0
         ports:
           - containerPort: 5432
-        livenessProbe:
-          exec:
-            command:
-            - psql --username=puppetdb puppetdb -c ''
-          failureThreshold: 6
-          initialDelaySeconds: 120
-          periodSeconds: 10
-          timeoutSeconds: 5
         name: postgres
         resources: {}
         volumeMounts:

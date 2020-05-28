@@ -6,7 +6,6 @@ metadata:
     io.pik.service: puppetserver-code
   name: puppetserver-code
 spec:
-  storageClassName: managed-nfs-storage
   resources:
     requests:
       storage: 100Mi
