@@ -6,13 +6,10 @@ metadata:
     io.pik.service: puppetserver-data
   name: puppetserver-data
 spec:
-  securityContext:
-    runAsUser: 3000
-    fsGroup: 3000
-  storageClassName: local
+  storageClassName: managed-nfs-storage
   resources:
     requests:
       storage: 100Mi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
 status: {}
